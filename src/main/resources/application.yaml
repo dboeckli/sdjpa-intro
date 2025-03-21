@@ -1,11 +1,22 @@
 spring:
   application:
     name: sdjpa-intro
+
   docker:
     compose:
       enabled: false
       stop:
         command: down
+
+  jpa:
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  h2:
+    console:
+      enabled: true
+
 
 management:
   health:
@@ -26,6 +37,7 @@ management:
 logging:
   level:
     org.zalando.logbook: TRACE
+    lorg.hibernate.orm.jdbc.bind: TRACE
 
 logbook:
   filter:
