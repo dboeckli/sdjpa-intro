@@ -1,5 +1,4 @@
-package ch.dboeckli.template;
-// TODOS: RENAME PACKAGE
+package ch.dboeckli.guru.jpa.intro;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -11,8 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(useMainMethod = SpringBootTest.UseMainMethod.ALWAYS)
 @Slf4j
-// TODOS: RENAME ME
-class Spring6TemplateApplicationTest {
+class Spring6ApplicationTest {
 
     @Autowired
     private ApplicationContext applicationContext;

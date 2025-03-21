@@ -8,11 +8,9 @@
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
-    <!-- TODO: RENAME ME -->
-    <groupId>ch.dboeckli.template</groupId>
-    <!-- TODO: RENAME ME -->
-    <artifactId>spring-6-project-template</artifactId>
-    <version>0.0.13-SNAPSHOT</version>
+    <groupId>ch.dboeckli.guru.springframework.jpa</groupId>
+    <artifactId>sdjpa-intro</artifactId>
+    <version>0.0.1</version>
 
     <name>${project.artifactId}</name>
     <description>${project.artifactId}</description>
@@ -43,9 +41,6 @@
         <logbook.version>3.11.0</logbook.version>
         <logstash-logback.version>8.0</logstash-logback.version>
         <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
-
-        <!-- our dependencies -->
-        <spring-6-rest-mvc-api.version>0.0.1-SNAPSHOT</spring-6-rest-mvc-api.version>
 
         <!-- Sonar -->
         <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
