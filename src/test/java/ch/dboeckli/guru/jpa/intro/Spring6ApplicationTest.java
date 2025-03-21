@@ -25,6 +25,10 @@ class Spring6ApplicationTest {
         log.info("Testing Spring 6 Application {}", applicationContext.getApplicationName());
 
         assertNotNull(applicationContext, "Application context should not be null");
+    }
+
+    @Test
+    void testBookRepository() {
         assertEquals(2, bookRepository.count());
     }
 
