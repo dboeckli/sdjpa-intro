@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-    <configuration default="false" name="Spring6TemplateApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-        <module name="spring-6-project-template" />
-        <option name="SPRING_BOOT_MAIN_CLASS" value="ch.dboeckli.guru.jpa.intro.Spring6Application" />
-        <method v="2">
-            <option name="Make" enabled="true" />
-        </method>
-    </configuration>
-</component>
