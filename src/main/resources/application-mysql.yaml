@@ -10,14 +10,20 @@ spring:
         command: down
 
   jpa:
+    database: mysql
+    hibernate:
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
-  h2:
-    console:
-      enabled: true
 
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: bookuser
+    #username: user
+    password: password
 
 management:
   health:
