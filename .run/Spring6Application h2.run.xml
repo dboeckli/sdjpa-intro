@@ -1,5 +1,6 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Spring6Application" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+  <configuration default="false" name="Spring6Application h2" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="h2" />
     <module name="spring-6-project-template" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="ch.dboeckli.guru.jpa.intro.Spring6Application" />
     <method v="2">

@@ -32,8 +32,8 @@ spec:
         - name: sdjpa-intro
           image: domboeckli/sdjpa-intro:${VERSION.TO.REPLACE}
           env:
-            #- name: SPRING_PROFILES_ACTIVE
-            #  value: postgres
+            - name: SPRING_PROFILES_ACTIVE
+              value: h2
             - name: SPRING_APPLICATION_JSON
               value: |
                 {
