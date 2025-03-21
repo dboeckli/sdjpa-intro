@@ -1,0 +1,29 @@
+package ch.dboeckli.guru.jpa.intro.repository;
+
+import ch.dboeckli.guru.jpa.intro.domain.Book;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+@DataJpaTest
+class BookRepositoryTest {
+
+    @Autowired
+    BookRepository bookRepository;
+
+    @Test
+    void testJpaTestSplice() {
+        long countBefore = bookRepository.count();
+
+        bookRepository.save(new Book("My Book", "1235555", "Self"));
+
+        long countAfter = bookRepository.count();
+
+        assertEquals(0, countBefore);
+        assertThat(countBefore).isLessThan(countAfter);
+    }
+
+}
