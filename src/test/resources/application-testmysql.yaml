@@ -11,6 +11,10 @@ spring:
       skip:
         in-tests: false
 
+  sql:
+    init:
+      mode: always
+
   jpa:
     database: mysql
     hibernate:

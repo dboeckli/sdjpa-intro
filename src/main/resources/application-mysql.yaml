@@ -9,6 +9,10 @@ spring:
       stop:
         command: down
 
+  sql:
+    init:
+      mode: always
+
   jpa:
     database: mysql
     hibernate:
