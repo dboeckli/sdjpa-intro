@@ -38,7 +38,7 @@ jobs:
       - name: Deploy application
         run: |
           # Replace the version placeholder in the deployment manifest
-          sed -i 's/${VERSION.TO.REPLACE}/${{ inputs.version }}/g' k8s/app.yml
+          sed -i 's|image: domboeckli/sdjpa-intro:[^[:space:]]*|image: domboeckli/sdjpa-intro:${{ inputs.version }}|g' k8s/app.yml
           kubectl apply -f k8s/
 
       - name: Wait for Pods to be ready
