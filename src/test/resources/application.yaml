@@ -18,7 +18,8 @@ spring:
     # we are using the h2 in compatible mode with mysql
     database: mysql
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
+    defer-datasource-initialization: false
     properties:
       hibernate:
         # we are using the h2 in compatible mode with mysql
