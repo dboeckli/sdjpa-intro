@@ -1,14 +1,20 @@
 package ch.dboeckli.guru.jpa.intro.repository;
 
+import ch.dboeckli.guru.jpa.intro.bootstrap.DataInitializer;
 import ch.dboeckli.guru.jpa.intro.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
+// we are using the h2 in compatible mode with mysql. to assure that it is not replaced with h2
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(DataInitializer.class)
 class BookRepositoryTest {
 
     @Autowired
@@ -22,7 +28,7 @@ class BookRepositoryTest {
 
         long countAfter = bookRepository.count();
 
-        assertEquals(0, countBefore);
+        assertEquals(2, countBefore);
         assertThat(countBefore).isLessThan(countAfter);
     }
 

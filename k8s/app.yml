@@ -30,10 +30,16 @@ spec:
     spec:
       containers:
         - name: sdjpa-intro
-          image: domboeckli/sdjpa-intro:${VERSION.TO.REPLACE}
+          image: domboeckli/sdjpa-intro:0.0.1-SNAPSHOT
           env:
             - name: SPRING_PROFILES_ACTIVE
-              value: h2
+              value: mysql
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+            - name: SPRING_DATASOURCE_USERNAME
+              value: user
+            - name: SPRING_DATASOURCE_PASSWORD
+              value: password
             - name: SPRING_APPLICATION_JSON
               value: |
                 {
