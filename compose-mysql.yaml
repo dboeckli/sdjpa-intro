@@ -17,7 +17,13 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./scripts:/docker-entrypoint-initdb.d
+      - ./src/scripts:/docker-entrypoint-initdb.d
       - mysql_data:/var/lib/mysql
+    entrypoint:
+      - bash
+      - -c
+      - |
+        chmod 777 /docker-entrypoint-initdb.d/*.sql
+        docker-entrypoint.sh mysqld
 volumes:
   mysql_data:
