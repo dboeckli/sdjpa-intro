@@ -13,7 +13,7 @@ spring:
 
   sql:
     init:
-      mode: always
+      mode: never
 
   jpa:
     database: mysql
@@ -24,6 +24,12 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
+
+  liquibase:
+    enabled: true
+    change-log: classpath:/db/changelog/changelog-master.xml
+    user: bookadmin
+    password: password
 
   datasource:
     url: jdbc:mysql://127.0.0.1:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false

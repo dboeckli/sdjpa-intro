@@ -31,6 +31,9 @@ spring:
     console:
       enabled: true
 
+  liquibase:
+    enabled: false
+
 management:
   health:
     readinessstate:
