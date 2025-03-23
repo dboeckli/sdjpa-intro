@@ -14,5 +14,8 @@
         <createTable tableName="book_seq">
             <column name="next_val" type="BIGINT"/>
         </createTable>
+        <createTable tableName="hibernate_sequence">
+            <column name="next_val" type="BIGINT"/>
+        </createTable>
     </changeSet>
 </databaseChangeLog>
