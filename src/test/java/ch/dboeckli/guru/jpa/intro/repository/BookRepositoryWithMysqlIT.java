@@ -25,7 +25,7 @@ class BookRepositoryWithMysqlIT {
     void testJpaTestSplice() {
         long countBefore = bookRepository.count();
 
-        bookRepository.save(new Book("My Book", "1235555", "Self"));
+        bookRepository.save(new Book("My Book", "1235555", "Self", null));
 
         long countAfter = bookRepository.count();
 

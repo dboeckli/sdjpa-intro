@@ -17,7 +17,10 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./scripts:/docker-entrypoint-initdb.d
-      - mysql_data:/var/lib/mysql
-volumes:
-  mysql_data:
+      - ./src/scripts:/docker-entrypoint-initdb.d/:ro
+      #- mysql_data:/var/lib/mysql
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+#volumes:
+#  mysql_data:

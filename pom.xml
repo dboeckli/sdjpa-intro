@@ -41,6 +41,7 @@
         <logbook.version>3.11.0</logbook.version>
         <logstash-logback.version>8.0</logstash-logback.version>
         <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
+        <liquibase-maven-plugin.version>4.2.2</liquibase-maven-plugin.version>
 
         <!-- Sonar -->
         <sonar-maven-plugin.version>5.0.0.4389</sonar-maven-plugin.version>
@@ -107,6 +108,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -121,6 +123,10 @@
             <scope>runtime</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -218,6 +224,8 @@
                         <!-- You can exclude further files from processing: -->
                         <exclude>**/toolchains.xml</exclude>
                         <exclude>**/settings.xml</exclude>
+                        <exclude>**/db/changelog/*.xml</exclude>
+                        <exclude>k8s/**</exclude>
                         <exclude>.run/**</exclude>
                         <exclude>**/banner.txt</exclude>
                     </excludes>
@@ -428,6 +436,28 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase-maven-plugin.version}</version>
+                <configuration>
+                    <url>jdbc:mysql://localhost:3306/bookdb?useUnicode=true&amp;characterEncoding=UTF-8&amp;serverTimezone=UTC&amp;allowPublicKeyRetrieval=true&amp;useSSL=false</url>
+                    <username>bookadmin</username>
+                    <password>password</password>
+                    <changeLogFile>changelog.xml</changeLogFile>
+                    <outputChangeLogFile>changelog.xml</outputChangeLogFile>
+                    <changeSetAuthor>dboeckli</changeSetAuthor>
+                    <changelogSchemaName>bookdb</changelogSchemaName>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.mysql</groupId>
+                        <artifactId>mysql-connector-j</artifactId>
+                        <version>${mysql.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <plugin>
