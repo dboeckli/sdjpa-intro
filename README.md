@@ -11,14 +11,31 @@ The generated changelog.xml file can be moved into the src/main/resources/db/cha
 applied whenever you start the application. In our case, all changelogs are always applied because we always start
 with an initial MySQL database.
 
+Currently, Liquibase is enabled by default in the mysql profile with those properties:
+- spring.liquibase.enabled = true
+- spring.flyway.enabled = false
+- spring.docker.compose.file = compose-mysql-with-liquibase.yaml
+
+this profile with above settings is starting mysql on the port 3306
+
+## Flyway
+
+To enable flyway in the mysql profile you need to override following properties when starting the application:
+- spring.liquibase.enabled = false
+- spring.flyway.enabled = true
+- spring.docker.compose.file = compose-mysql-with-flyway.yaml
+
+this profile with above settings is starting mysql on the port 3307
+
+
 ## Kubernetes
 
 ### Generate Config Map for mysql init script
 
-When updating 'src/scripts/init-mysql.sql', we need to apply this to the Kubernetes ConfigMap as well:
+When updating 'src/scripts/init-mysql-liquibase.sql', we need to apply this to the Kubernetes ConfigMap as well:
 
 ```bash
-kubectl create configmap mysql-init-script --from-file=init.sql=src/scripts/init-mysql.sql --dry-run=client -o yaml | Out-File -Encoding utf8 k8s/mysql-init-script-configmap.yaml
+kubectl create configmap mysql-init-script --from-file=init.sql=src/scripts/init-mysql-liquibase.sql --dry-run=client -o yaml | Out-File -Encoding utf8 k8s/mysql-init-script-configmap.yaml
 ```
 
 ### Deployment

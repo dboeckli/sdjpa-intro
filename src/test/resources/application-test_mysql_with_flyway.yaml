@@ -4,7 +4,7 @@ spring:
 
   docker:
     compose:
-      file: compose-mysql.yaml
+      file: compose-mysql-with-flyway.yaml
       enabled: true
       stop:
         command: down
@@ -26,13 +26,16 @@ spring:
         format_sql: true
 
   liquibase:
+    enabled: false
+
+  flyway:
     enabled: true
-    change-log: classpath:/db/changelog/00_changelog-master.xml
     user: bookadmin
     password: password
+    url: jdbc:mysql://localhost:3307/bookdb-with-flyway?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKey
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    url: jdbc:mysql://127.0.0.1:3307/bookdb-with-flyway?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: bookuser
     password: password

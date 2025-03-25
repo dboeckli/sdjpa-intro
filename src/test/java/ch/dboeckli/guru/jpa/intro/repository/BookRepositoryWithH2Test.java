@@ -15,7 +15,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // we are using the h2 in compatible mode with mysql. to assure that it is not replaced with h2
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(DataInitializer.class)
-class BookRepositoryTest {
+class BookRepositoryWithH2Test {
 
     @Autowired
     BookRepository bookRepository;

@@ -1,0 +1,27 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Spring6Application mysql liquibase" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <option name="ACTIVE_PROFILES" value="mysql" />
+    <additionalParameters>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="spring.liquibase.enabled" />
+        <option name="value" value="true" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="spring.flyway.enabled" />
+        <option name="value" value="false" />
+      </param>
+      <param>
+        <option name="enabled" value="true" />
+        <option name="name" value="spring.docker.compose.file" />
+        <option name="value" value="compose-mysql-with-liquibase.yaml" />
+      </param>
+    </additionalParameters>
+    <module name="sdjpa-intro" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="ch.dboeckli.guru.jpa.intro.Spring6Application" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

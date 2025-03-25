@@ -1,14 +1,14 @@
 services:
-  mysql:
-    container_name: mysql
+  mysql-flyway:
+    container_name: mysql-flyway
     image: mysql:8.4.4
     environment:
-      MYSQL_DATABASE: bookdb
+      MYSQL_DATABASE: bookdb-with-flyway
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     ports:
-      - "3306:3306"
+      - "3307:3306"
     expose:
       - "3306"
     healthcheck:
@@ -17,7 +17,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      - ./src/scripts:/docker-entrypoint-initdb.d/:ro
+      - ./src/scripts/init-mysql-flyway.sql:/docker-entrypoint-initdb.d/init-mysql-flyway.sql:ro
       #- mysql_data:/var/lib/mysql
     command:
       - --character-set-server=utf8mb4
