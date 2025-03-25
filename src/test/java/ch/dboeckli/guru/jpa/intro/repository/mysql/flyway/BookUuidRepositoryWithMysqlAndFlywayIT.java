@@ -1,7 +1,9 @@
-package ch.dboeckli.guru.jpa.intro.repository;
+package ch.dboeckli.guru.jpa.intro.repository.mysql.flyway;
 
 import ch.dboeckli.guru.jpa.intro.bootstrap.DataInitializer;
-import ch.dboeckli.guru.jpa.intro.domain.Book;
+import ch.dboeckli.guru.jpa.intro.domain.example.uuid.BookUuid;
+import ch.dboeckli.guru.jpa.intro.repository.BookUuidRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -18,21 +20,27 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
 @Import(DataInitializer.class)
-class BookRepositoryWithMysqlAndFlywayIT {
+@Slf4j
+class BookUuidRepositoryWithMysqlAndFlywayIT {
 
     @Autowired
-    BookRepository bookRepository;
+    BookUuidRepository bookUuidRepository;
 
     @Test
     void testJpaTestSplice() {
-        long countBefore = bookRepository.count();
+        long countBefore = bookUuidRepository.count();
 
-        bookRepository.save(new Book("My Book", "1235555", "Self", null));
+        BookUuid bookUuid = new BookUuid();
+        bookUuid.setIsbn("978-3-16-148410-0");
+        bookUuid.setTitle("Clean Code");
+        bookUuid.setPublisher("Prentice Hall");
+        bookUuidRepository.save(bookUuid);
 
-        long countAfter = bookRepository.count();
+        long countAfter = bookUuidRepository.count();
 
-        assertEquals(2, countBefore);
+        assertEquals(1, countBefore);
         assertThat(countBefore).isLessThan(countAfter);
-    }
 
+        bookUuidRepository.findAll().forEach(bookUuidFound -> log.info("BookUuid: " + bookUuidFound));
+    }
 }

@@ -8,7 +8,11 @@
   http://www.liquibase.org/xml/ns/pro
   http://www.liquibase.org/xml/ns/pro/liquibase-pro-3.8.xsd">
     <include file="/db/changelog/01_baseline-changelog.xml"/>
-    <include file="/db/changelog/02-init-hibernate.xml"/>
+    <include file="/db/changelog/02_init-hibernate.xml"/>
     <include file="/db/changelog/03_add_author.xml"/>
     <include file="/db/changelog/04_add-author-id-to-book.xml"/>
+    <include file="/db/changelog/05_autoincrement_pk.xml"/>
+    <include file="/db/changelog/06_author_uuid.xml"/>
+    <include file="/db/changelog/07_book_uuid.xml"/>
+    <include file="/db/changelog/08_book_natural_key.xml"/>
 </databaseChangeLog>
