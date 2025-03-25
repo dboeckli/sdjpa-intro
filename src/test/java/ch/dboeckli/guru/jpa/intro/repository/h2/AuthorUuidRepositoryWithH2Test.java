@@ -1,7 +1,8 @@
-package ch.dboeckli.guru.jpa.intro.repository;
+package ch.dboeckli.guru.jpa.intro.repository.h2;
 
 import ch.dboeckli.guru.jpa.intro.bootstrap.DataInitializer;
-import ch.dboeckli.guru.jpa.intro.domain.Book;
+import ch.dboeckli.guru.jpa.intro.domain.example.uuid.AuthorUuid;
+import ch.dboeckli.guru.jpa.intro.repository.AuthorUuidRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -15,21 +16,23 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 // we are using the h2 in compatible mode with mysql. to assure that it is not replaced with h2
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(DataInitializer.class)
-class BookRepositoryWithH2Test {
+class AuthorUuidRepositoryWithH2Test {
 
     @Autowired
-    BookRepository bookRepository;
+    AuthorUuidRepository authorUuidRepository;
 
     @Test
     void testJpaTestSplice() {
-        long countBefore = bookRepository.count();
+        long countBefore = authorUuidRepository.count();
 
-        bookRepository.save(new Book("My Book", "1235555", "Self", null));
+        AuthorUuid authorUuid = new AuthorUuid();
+        authorUuid.setFirstName("Raul");
+        authorUuid.setLastName("Pedro");
+        authorUuidRepository.save(authorUuid);
 
-        long countAfter = bookRepository.count();
+        long countAfter = authorUuidRepository.count();
 
-        assertEquals(2, countBefore);
+        assertEquals(1, countBefore);
         assertThat(countBefore).isLessThan(countAfter);
     }
-
 }

@@ -12,4 +12,6 @@
     <include file="/db/changelog/03_add_author.xml"/>
     <include file="/db/changelog/04_add-author-id-to-book.xml"/>
     <include file="/db/changelog/05_autoincrement_pk.xml"/>
+    <include file="/db/changelog/06_author_uuid.xml"/>
+    <include file="/db/changelog/07_book_uuid.xml"/>
 </databaseChangeLog>
