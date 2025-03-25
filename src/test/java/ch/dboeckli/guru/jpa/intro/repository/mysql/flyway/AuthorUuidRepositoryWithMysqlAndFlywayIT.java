@@ -3,6 +3,7 @@ package ch.dboeckli.guru.jpa.intro.repository.mysql.flyway;
 import ch.dboeckli.guru.jpa.intro.bootstrap.DataInitializer;
 import ch.dboeckli.guru.jpa.intro.domain.example.uuid.AuthorUuid;
 import ch.dboeckli.guru.jpa.intro.repository.AuthorUuidRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
 @Import(DataInitializer.class)
+@Slf4j
 class AuthorUuidRepositoryWithMysqlAndFlywayIT {
 
     @Autowired
@@ -37,5 +39,7 @@ class AuthorUuidRepositoryWithMysqlAndFlywayIT {
 
         assertEquals(1, countBefore);
         assertThat(countBefore).isLessThan(countAfter);
+
+        authorUuidRepository.findAll().forEach(authorUuidFound -> log.info("AuthorUuid: " + authorUuidFound));
     }
 }

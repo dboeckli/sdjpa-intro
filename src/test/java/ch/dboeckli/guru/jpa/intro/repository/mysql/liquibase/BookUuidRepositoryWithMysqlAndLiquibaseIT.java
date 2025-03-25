@@ -3,6 +3,7 @@ package ch.dboeckli.guru.jpa.intro.repository.mysql.liquibase;
 import ch.dboeckli.guru.jpa.intro.bootstrap.DataInitializer;
 import ch.dboeckli.guru.jpa.intro.domain.example.uuid.BookUuid;
 import ch.dboeckli.guru.jpa.intro.repository.BookUuidRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -17,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
 @Import(DataInitializer.class)
+@Slf4j
 class BookUuidRepositoryWithMysqlAndLiquibaseIT {
 
     @Autowired
@@ -36,5 +38,7 @@ class BookUuidRepositoryWithMysqlAndLiquibaseIT {
 
         assertEquals(1, countBefore);
         assertThat(countBefore).isLessThan(countAfter);
+
+        bookUuidRepository.findAll().forEach(bookUuidFound -> log.info("BookUuid: " + bookUuidFound));
     }
 }
