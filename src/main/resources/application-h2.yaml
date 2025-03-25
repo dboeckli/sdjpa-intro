@@ -34,6 +34,9 @@ spring:
   liquibase:
     enabled: false
 
+  flyway:
+    enabled: false
+
 management:
   health:
     readinessstate:

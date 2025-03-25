@@ -4,13 +4,12 @@ spring:
 
   docker:
     compose:
-      ## depending which migrate tool you want (liquibase/flyway) you need to overwrite this config and enable liquibase or flyway
-      # See intellij runner. currently liquibase is the default
-      # file: compose-mysql-with-flyway.yaml
       file: compose-mysql-with-liquibase.yaml
       enabled: true
       stop:
         command: down
+      skip:
+        in-tests: false
 
   sql:
     init:
@@ -26,12 +25,6 @@ spring:
         show_sql: true
         format_sql: true
 
-  datasource:
-    url: jdbc:mysql://127.0.0.1:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    username: bookuser
-    password: password
-
   liquibase:
     enabled: true
     change-log: classpath:/db/changelog/00_changelog-master.xml
@@ -41,6 +34,12 @@ spring:
   flyway:
     enabled: false
     user: bookadmin
+    password: password
+
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/bookdb-with-liquibase?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: bookuser
     password: password
 
 management:

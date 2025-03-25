@@ -12,11 +12,11 @@ import org.springframework.test.context.ActiveProfiles;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@ActiveProfiles("testmysql")
+@ActiveProfiles("test_mysql_with_liquibase")
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
 @Import(DataInitializer.class)
-class BookRepositoryWithMysqlIT {
+class BookRepositoryWithMysqlAndLiquibaseIT {
 
     @Autowired
     BookRepository bookRepository;
