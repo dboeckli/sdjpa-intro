@@ -14,4 +14,5 @@
     <include file="/db/changelog/05_autoincrement_pk.xml"/>
     <include file="/db/changelog/06_author_uuid.xml"/>
     <include file="/db/changelog/07_book_uuid.xml"/>
+    <include file="/db/changelog/08_book_natural_key.xml"/>
 </databaseChangeLog>
