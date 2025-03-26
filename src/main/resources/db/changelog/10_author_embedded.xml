@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+    xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+    <changeSet id="10" author="dboeckli">
+        <createTable tableName="author_embedded">
+            <column name="first_name" type="varchar(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_author_embedded"/>
+            </column>
+            <column name="last_name" type="varchar(255)">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_author_embedded"/>
+            </column>
+            <column name="country" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

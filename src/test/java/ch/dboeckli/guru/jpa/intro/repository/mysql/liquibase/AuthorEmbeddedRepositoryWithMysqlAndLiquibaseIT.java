@@ -1,0 +1,39 @@
+package ch.dboeckli.guru.jpa.intro.repository.mysql.liquibase;
+
+import ch.dboeckli.guru.jpa.intro.bootstrap.DataInitializer;
+import ch.dboeckli.guru.jpa.intro.domain.example.composite.AuthorEmbedded;
+import ch.dboeckli.guru.jpa.intro.domain.example.composite.NameId;
+import ch.dboeckli.guru.jpa.intro.repository.AuthorEmbeddedRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
+@ActiveProfiles("test_mysql_with_liquibase")
+@DataJpaTest
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
+@Import(DataInitializer.class)
+@Slf4j
+class AuthorEmbeddedRepositoryWithMysqlAndLiquibaseIT {
+
+    @Autowired
+    AuthorEmbeddedRepository authorEmbeddedRepository;
+
+    @Test
+    void authorEmbeddedTest() {
+        NameId nameId = new NameId("John", "T");
+        AuthorEmbedded authorEmbedded = new AuthorEmbedded(nameId);
+
+        AuthorEmbedded saved = authorEmbeddedRepository.save(authorEmbedded);
+        assertThat(saved).isNotNull();
+
+        AuthorEmbedded fetched = authorEmbeddedRepository.getReferenceById(nameId);
+        assertThat(fetched).isNotNull();
+    }
+
+}
