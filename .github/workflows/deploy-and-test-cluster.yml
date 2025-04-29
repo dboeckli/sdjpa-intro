@@ -52,7 +52,7 @@ jobs:
           APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
           # Replace the version placeholder in the deployment manifest
-          sed -i 's|image: domboeckli/sdjpa-intro:[^[:space:]]*|image: domboeckli/sdjpa-intro:${{ inputs.version }}|g' k8s/app.yml
+          sed -i 's|image: domboeckli/$APPLICATION_NAME:[^[:space:]]*|image: domboeckli/$APPLICATION_NAME:${{ inputs.version }}|g' k8s/app.yml
           cat k8s/app.yml
           kubectl apply -f k8s/
 
@@ -60,10 +60,10 @@ jobs:
         env:
           APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
-          if ! kubectl wait --for=condition=ready pod -l app=sdjpa-intro --timeout=180s; then
+          if ! kubectl wait --for=condition=ready pod -l app="${APPLICATION_NAME}" --timeout=180s; then
             echo "Pod did not become ready within 180 seconds. Displaying logs:"
-            kubectl get pods -l app=sdjpa-intro
-            POD_NAME=$(kubectl get pods -l app=sdjpa-intro -o jsonpath="{.items[0].metadata.name}")
+            kubectl get pods -l app="${APPLICATION_NAME}"
+            POD_NAME=$(kubectl get pods -l app="${APPLICATION_NAME}" -o jsonpath="{.items[0].metadata.name}")
             kubectl logs $POD_NAME
             echo "Describing the pod:"
             kubectl describe pod $POD_NAME
