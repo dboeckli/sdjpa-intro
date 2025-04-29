@@ -7,7 +7,6 @@ image:
 
 # Namespace configuration
 # This defines the Kubernetes namespace where the resources will be deployed
-# TODO: Adjust this according to your project needs and security requirements
 deployment:
   namespace: sdjpa-intro
 
