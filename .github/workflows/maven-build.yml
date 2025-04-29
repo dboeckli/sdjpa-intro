@@ -358,7 +358,7 @@ jobs:
           echo "NAMESPACE: $NAMESPACE"
           
           gh workflow run deploy-and-test-cluster.yml -R ${{ github.repository }} -r ${{ github.ref }} \
-          -f "application-name=$ARTIFACT_ID \
+          -f "application-name=$ARTIFACT_ID" \
           -f "version=$BRANCH_MVN_VERSION" \
           -f "helm-chart-version=$HELM_CHART_VERSION" \
           -f "namespace=$NAMESPACE" \
