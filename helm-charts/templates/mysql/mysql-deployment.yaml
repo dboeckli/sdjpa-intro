@@ -24,11 +24,11 @@ spec:
           imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
           env:
             - name: MYSQL_ROOT_PASSWORD
-              value: password
+              value: {{ .Values.mysql.rootPassword }}
             - name: MYSQL_USER
-              value: user
+              value: {{ .Values.mysql.user }}
             - name: MYSQL_PASSWORD
-              value: password
+              value: {{ .Values.mysql.password }}
             - name: MYSQL_DATABASE
               value: {{ .Values.mysql.database }}
           ports:

@@ -17,7 +17,7 @@ spec:
     spec:
       initContainers:
         - name: wait-for-mysql
-          image: busybox:1.28
+          image: busybox:1.37.0
           command: [ 'sh', '-c', 'until nc -z sdjpa-intro-mysql 3306; do echo waiting for mysql; sleep 2; done;' ]
       containers:
         - name: {{ .Chart.Name }}
@@ -31,9 +31,9 @@ spec:
             - name: SPRING_DATASOURCE_URL
               value: {{ .Values.spring.datasource.url }}
             - name: SPRING_DATASOURCE_USERNAME
-              value: user
+              value: {{ .Values.mysql.user }}
             - name: SPRING_DATASOURCE_PASSWORD
-              value: password
+              value: {{ .Values.mysql.password }}
             - name: SPRING_APPLICATION_JSON
               value: {{ .Values.springApplicationJson | toJson | quote }}
           ports:

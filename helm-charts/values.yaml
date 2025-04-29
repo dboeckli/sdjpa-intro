@@ -66,4 +66,4 @@ mysql:
   user: bookuser
   password: password
 
-  rootPassword: changeme
+  rootPassword: password
