@@ -341,7 +341,7 @@ jobs:
           BRANCH_MVN_VERSION: ${{needs.setup.outputs.BRANCH_MVN_VERSION}}
           HELM_CHART_VERSION: ${{needs.build.outputs.HELM_CHART_VERSION}}
           NAMESPACE: ${{needs.build.outputs.NAMESPACE}}
-          ARTIFACT_ID: ${{ steps.set_version.outputs.ARTIFACT_ID }}
+          ARTIFACT_ID: ${{needs.setup.outputs.ARTIFACT_ID}}
         run: |
           # Check if required parameters are set
           required_params=("BRANCH_MVN_VERSION" "HELM_CHART_VERSION" "NAMESPACE" "GH_TOKEN")
