@@ -53,6 +53,7 @@ jobs:
         run: |
           # Replace the version placeholder in the deployment manifest
           sed -i 's|image: domboeckli/$APPLICATION_NAME:[^[:space:]]*|image: domboeckli/$APPLICATION_NAME:${{ inputs.version }}|g' k8s/app.yml
+          cat k8s/app.yml
           kubectl apply -f k8s/
 
       - name: Wait for Pods to be ready
@@ -75,9 +76,31 @@ jobs:
       - name: Display Deployment Information
         env:
           APPLICATION_NAME: ${{ inputs.application-name }}
+        if: always()
         run: |
           echo "Deployment Information:"
-          kubectl get deployment $APPLICATION_NAME -o yaml
+          
+          echo "--- Pods:"
+          kubectl get pods -n default
+          
+          echo "--- Describe pods:"
+          kubectl describe pods -n default
+          
+          echo "--- Show Events:"
+          kubectl get events --sort-by=.metadata.creationTimestamp -n default
+          
+          echo "--- Show Logs (if pods exist)"
+          PODS=$(kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -o jsonpath="{.items[*].metadata.name}" -n default)
+          if [ -n "$PODS" ]; then
+            for POD in $PODS; do
+              echo "Logs for pod $POD:"
+              kubectl logs $POD -n default --all-containers
+            done
+          else
+            echo "No pods found with label app.kubernetes.io/name=$APPLICATION_NAME in default namespace"
+            echo "Listing all pods in default namespace:"
+            kubectl get pods -n default
+          fi      
           
   deploy-app-with-helm:
     runs-on: ubuntu-latest
