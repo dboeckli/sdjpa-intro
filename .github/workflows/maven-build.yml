@@ -216,7 +216,10 @@ jobs:
             NAMESPACE="default"
           fi
           echo "### namespace is: $NAMESPACE"
-          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_OUTPUT      
+          echo "NAMESPACE=$NAMESPACE" >> $GITHUB_OUTPUT 
+          
+          echo ":sailboat: Helm Chart Version: $HELM_CHART_VERSION" >> $GITHUB_STEP_SUMMARY
+          echo ":sailboat: Namespace: $NAMESPACE" >> $GITHUB_STEP_SUMMARY
           
   analyze:
     runs-on: ubuntu-latest
