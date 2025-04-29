@@ -28,13 +28,13 @@
     },
     "kubernetes": {
         "fileMatch": [
-            "(^|/)k8s/.+\\.yaml$",
-            "^helm-charts/.+\\.yaml$"
+            "k8s/.+\\.yaml$",
+            "helm-charts/.+\\.yaml$"
         ]
     },
     "helm-values": {
         "fileMatch": [
-            "^helm-charts/.+/values\\.yaml$"
+            "helm-charts/.+/values\\.yaml$"
         ]
     },
     "packageRules": [
