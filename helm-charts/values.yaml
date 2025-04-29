@@ -1,0 +1,64 @@
+replicaCount: 1
+
+image:
+  repository: domboeckli/@project.artifactId@
+  tag: @project.version@
+  pullPolicy: IfNotPresent
+
+# Namespace configuration
+# This defines the Kubernetes namespace where the resources will be deployed
+# TODO: Adjust this according to your project needs and security requirements
+deployment:
+  namespace: sdjpa-intro
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 8080
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 1Gi
+  requests:
+    cpu: 250m
+    memory: 512Mi
+
+global:
+  timezone: Europe/Zurich
+  timezonePath: /etc/localtime
+  springDebug: false
+
+spring:
+  profiles:
+    active: mysql
+  datasource:
+    url: jdbc:mysql://mysql:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+
+springApplicationJson:
+  management:
+    endpoint:
+      health:
+        probes:
+          add-additional-paths: true
+
+probes:
+  startup:
+    failureThreshold: 30
+    periodSeconds: 10
+  readiness:
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+  liveness:
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 6
+
+mysql:
+  image:
+    repository: mysql
+    tag: "8.4.4"
+    pullPolicy: IfNotPresent
+  database: mydatabase
+  rootPassword: changeme
