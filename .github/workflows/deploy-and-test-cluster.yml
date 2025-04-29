@@ -127,20 +127,14 @@ jobs:
         run: |
           echo "Deployment Information:"
           
-          echo "--- Get all namespaces"
-          kubectl get all --all-namespaces
+          echo "--- Pods in $NAMESPACE namespace:"
+          kubectl get pods -n $NAMESPACE
           
-          echo "--- Describe all pods"
-          kubectl describe pods --all-namespaces
+          echo "--- Describe pods in $NAMESPACE namespace:"
+          kubectl describe pods -n $NAMESPACE
           
-          echo "--- Helm list all namespaces:"
-          helm list --all-namespaces
-          
-          echo "--- Helm get app:"
-          helm get all sdjpa-intro   
-          
-          echo "--- Show Events"
-          kubectl get events --sort-by=.metadata.creationTimestamp --all-namespaces
+          echo "--- Show Events in $NAMESPACE namespace:"
+          kubectl get events --sort-by=.metadata.creationTimestamp -n $NAMESPACE
           
           echo "--- Show Logs (if pods exist)"
           PODS=$(kubectl get pods -l app.kubernetes.io/name=sdjpa-intro -o jsonpath="{.items[*].metadata.name}" -n $NAMESPACE)
