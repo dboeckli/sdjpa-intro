@@ -15,6 +15,10 @@ spec:
       labels:
         {{- include "application-template.selectorLabels" . | nindent 8 }}
     spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.28
+          command: [ 'sh', '-c', 'until nc -z sdjpa-intro-mysql 3306; do echo waiting for mysql; sleep 2; done;' ]
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
