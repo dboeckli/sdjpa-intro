@@ -200,6 +200,8 @@ jobs:
 
       - name: get helm version and namespace
         id: get_helm_version_and_namespace
+        env:
+          ARTIFACT_ID: ${{needs.setup.outputs.ARTIFACT_ID}}
         run: |
           set -o pipefail    # don't hide errors within pipes
           set -o nounset     # abort on unbound variable
@@ -209,7 +211,7 @@ jobs:
           echo "### helm chart version is: $HELM_CHART_VERSION"
           echo "HELM_CHART_VERSION=$HELM_CHART_VERSION" >> $GITHUB_OUTPUT
           
-          NAMESPACE=$(grep 'name:' target/helm-templated/spring-6-project-template/templates/namespace.yaml | awk '{print $2}')
+          NAMESPACE=$(grep 'name:' target/helm-templated/$ARTIFACT_ID/templates/namespace.yaml | awk '{print $2}') 
           if [ -z "$NAMESPACE" ]; then
             NAMESPACE="default"
           fi
