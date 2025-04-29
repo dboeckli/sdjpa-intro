@@ -5,6 +5,10 @@ run-name: >
 on:
   workflow_dispatch:
     inputs:
+      application-name:
+        type: string
+        description: 'Application Name'
+        required: true
       version:
         type: string
         description: 'Version to deploy'
@@ -34,7 +38,7 @@ jobs:
     steps:
       - name: Show Version
         run: |
-          echo "Deploying Version: ${{ inputs.version }}"
+          echo "Deploying Application ${{ inputs.application-name }}, Version: ${{ inputs.version }}"
           echo "Deployment triggered by workflow ${{ inputs.deployed-by-workflow }}. Run number: ${{ inputs.deployed-by-build }}"
 
       - name: Check out the repository
@@ -44,17 +48,21 @@ jobs:
         uses: helm/kind-action@v1.12.0
 
       - name: Deploy application
+        env:
+          APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
           # Replace the version placeholder in the deployment manifest
-          sed -i 's|image: domboeckli/sdjpa-intro:[^[:space:]]*|image: domboeckli/sdjpa-intro:${{ inputs.version }}|g' k8s/app.yml
+          sed -i 's|image: domboeckli/$APPLICATION_NAME:[^[:space:]]*|image: domboeckli/$APPLICATION_NAME:${{ inputs.version }}|g' k8s/app.yml
           kubectl apply -f k8s/
 
       - name: Wait for Pods to be ready
+        env:
+          APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
-          if ! kubectl wait --for=condition=ready pod -l app=sdjpa-intro --timeout=180s; then
+          if ! kubectl wait --for=condition=ready pod -l app=$APPLICATION_NAME --timeout=180s; then
             echo "Pod did not become ready within 180 seconds. Displaying logs:"
-            kubectl get pods -l app=sdjpa-intro
-            POD_NAME=$(kubectl get pods -l app=sdjpa-intro -o jsonpath="{.items[0].metadata.name}")
+            kubectl get pods -l app=$APPLICATION_NAME
+            POD_NAME=$(kubectl get pods -l app=$APPLICATION_NAME -o jsonpath="{.items[0].metadata.name}")
             kubectl logs $POD_NAME
             echo "Describing the pod:"
             kubectl describe pod $POD_NAME
@@ -65,9 +73,11 @@ jobs:
           echo "::notice:: ### Deployment triggered by workflow ${{ inputs.deployed-by-workflow }}. Run number: ${{ inputs.deployed-by-build }}: $BUILD_LINK"
 
       - name: Display Deployment Information
+        env:
+          APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
           echo "Deployment Information:"
-          kubectl get deployment sdjpa-intro -o yaml
+          kubectl get deployment $APPLICATION_NAME -o yaml
           
   deploy-app-with-helm:
     runs-on: ubuntu-latest
@@ -76,7 +86,7 @@ jobs:
     steps:
       - name: Show Version
         run: |
-          echo "Deploying Applicaion with Version: ${{ inputs.version }}, Helm chart version: ${{ inputs.helm-chart-version }}, to namespace ${{ inputs.namespace }}"
+          echo "Deploying Application ${{ inputs.application-name }} with Version: ${{ inputs.version }}, Helm chart version: ${{ inputs.helm-chart-version }}, to namespace ${{ inputs.namespace }}"
           echo "Deployment triggered by workflow ${{ inputs.deployed-by-workflow }}. Run number: ${{ inputs.deployed-by-build }}"
 
       - name: Check out the repository
@@ -89,18 +99,20 @@ jobs:
         env:
           HELM_CHART_VERSION: ${{ inputs.helm-chart-version }}
           DOCKER_USER: ${{ vars.DOCKER_USER }}
+          APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
           echo "Pulling Helm Chart Version: $HELM_CHART_VERSION"
-          helm pull oci://registry-1.docker.io/$DOCKER_USER/sdjpa-intro --version "$HELM_CHART_VERSION"
-          tar -xvf sdjpa-intro-*.tgz  
+          helm pull oci://registry-1.docker.io/$DOCKER_USER/$APPLICATION_NAME --version "$HELM_CHART_VERSION"
+          tar -xvf $APPLICATION_NAME-*.tgz  
 
       - name: Deploy application with Helm
         env:
           APP_VERSION: ${{ inputs.version }}
+          APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
           # Install/upgrade the Helm chart
           echo "Deploying Application: $APP_VERSION"
-          helm upgrade --install sdjpa-intro ./sdjpa-intro \
+          helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME \
           --set image.tag=${APP_VERSION} \
           --wait --timeout 5m \
           --debug
@@ -108,9 +120,10 @@ jobs:
       - name: Wait for Pods to be ready
         env:
           NAMESPACE: ${{ inputs.namespace }}
+          APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
-          if ! kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=sdjpa-intro -n $NAMESPACE --timeout=180s; then
-            POD_NAME=$(kubectl get pods -l app.kubernetes.io/name=sdjpa-intro -o jsonpath="{.items[0].metadata.name}" -n $NAMESPACE)
+          if ! kubectl wait --for=condition=ready pod -l app.kubernetes.io/name=$APPLICATION_NAME -n $NAMESPACE --timeout=180s; then
+            POD_NAME=$(kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -o jsonpath="{.items[0].metadata.name}" -n $NAMESPACE)
             kubectl logs $POD_NAME -n $NAMESPACE
             echo "Describing the pod:"
             kubectl describe pod $POD_NAME -n $NAMESPACE
@@ -123,6 +136,7 @@ jobs:
       - name: Display Deployment Information
         env:
           NAMESPACE: ${{ inputs.namespace }}
+          APPLICATION_NAME: ${{ inputs.application-name }}
         if: always()
         run: |
           echo "Deployment Information:"
@@ -137,14 +151,14 @@ jobs:
           kubectl get events --sort-by=.metadata.creationTimestamp -n $NAMESPACE
           
           echo "--- Show Logs (if pods exist)"
-          PODS=$(kubectl get pods -l app.kubernetes.io/name=sdjpa-intro -o jsonpath="{.items[*].metadata.name}" -n $NAMESPACE)
+          PODS=$(kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -o jsonpath="{.items[*].metadata.name}" -n $NAMESPACE)
           if [ -n "$PODS" ]; then
             for POD in $PODS; do
               echo "Logs for pod $POD:"
               kubectl logs $POD -n $NAMESPACE --all-containers
             done
           else
-            echo "No pods found with label app.kubernetes.io/name=sdjpa-intro in $NAMESPACE namespace"
+            echo "No pods found with label app.kubernetes.io/name=$APPLICATION_NAME in $NAMESPACE namespace"
             echo "Listing all pods in $NAMESPACE namespace:"
             kubectl get pods -n $NAMESPACE
           fi          

@@ -341,6 +341,7 @@ jobs:
           BRANCH_MVN_VERSION: ${{needs.setup.outputs.BRANCH_MVN_VERSION}}
           HELM_CHART_VERSION: ${{needs.build.outputs.HELM_CHART_VERSION}}
           NAMESPACE: ${{needs.build.outputs.NAMESPACE}}
+          ARTIFACT_ID: ${{ steps.set_version.outputs.ARTIFACT_ID }}
         run: |
           # Check if required parameters are set
           required_params=("BRANCH_MVN_VERSION" "HELM_CHART_VERSION" "NAMESPACE" "GH_TOKEN")
@@ -351,15 +352,18 @@ jobs:
             fi
           done
           echo "Trigger Deployment with variables"
+          echo "ARTIFACT_ID: $ARTIFACT_ID"
           echo "BRANCH_MVN_VERSION: $BRANCH_MVN_VERSION"
           echo "HELM_CHART_VERSION: $HELM_CHART_VERSION"
           echo "NAMESPACE: $NAMESPACE"
           
           gh workflow run deploy-and-test-cluster.yml -R ${{ github.repository }} -r ${{ github.ref }} \
+          -f "application-name=$ARTIFACT_ID \
           -f "version=$BRANCH_MVN_VERSION" \
           -f "helm-chart-version=$HELM_CHART_VERSION" \
           -f "namespace=$NAMESPACE" \
           -f "deployed-by-build=${{ github.run_id }}" \
           -f "deployed-by-workflow=${{ github.workflow }}"
+          
 
         
