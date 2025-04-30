@@ -31,7 +31,7 @@ spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.37.0
-          command: [ 'sh', '-c', 'until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;' ]
+          command: [ 'sh', '-c', 'until nc -z mysql 3306; do echo "[busybox: wait-for-mysql] waiting for mysql"; sleep 2; done; echo "[busybox: wait-for-mysql] mysql is available"' ]
       containers:
         - name: sdjpa-intro
           image: domboeckli/sdjpa-intro:@project.version@
