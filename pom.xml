@@ -363,13 +363,35 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
+
+                    <execution>
+                        <id>copy-and-filter-k8s-yaml-to-target</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/k8s</outputDirectory>
+                            <includeEmptyDirs>true</includeEmptyDirs>
+                            <resources>
+                                <resource>
+                                    <directory>k8s</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
                     <!--
                         This execution copies helm charts and puts them into the target directory 'helm-charts'. The helm charts are used to deploy the project.
                         During the build some variables are resolved by maven filtering (e.g. the project version).
                     -->
                     <execution>
                         <id>copy-and-filter-helm-charts-to-target</id>
-                        <phase>generate-resources</phase>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>

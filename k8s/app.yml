@@ -28,9 +28,13 @@ spec:
       labels:
         app: sdjpa-intro
     spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.37.0
+          command: [ 'sh', '-c', 'until nc -z mysql 3306; do echo "[busybox: wait-for-mysql] waiting for mysql"; sleep 2; done; echo "[busybox: wait-for-mysql] mysql is available"' ]
       containers:
         - name: sdjpa-intro
-          image: domboeckli/sdjpa-intro:0.0.1-SNAPSHOT
+          image: domboeckli/sdjpa-intro:@project.version@
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: mysql
