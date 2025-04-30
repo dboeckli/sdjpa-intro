@@ -539,7 +539,7 @@
                         <configuration>
                             <skip>${skip.docker.build}</skip>
                             <image>
-                                <name>local/${project.artifactId}:latest</name>
+                                <name>local/${project.artifactId}:${docker.image.tag}</name>
                                 <tags>
                                     local/${project.artifactId}:${project.version}
                                 </tags>
@@ -557,7 +557,7 @@
                         <configuration>
                             <skip>${skip.docker.publish}</skip>
                             <image>
-                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:latest</name>
+                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:${docker.image.tag}</name>
                                 <tags>
                                     ghcr.io/${project.organization.name}/${project.artifactId}:${project.version}
                                 </tags>
@@ -589,7 +589,7 @@
                                 <name>${env.DOCKER_USER}/${project.artifactId}:${project.version}</name>
                                 <tags>
                                     <!--suppress UnresolvedMavenProperty -->
-                                    ${env.DOCKER_USER}/${project.artifactId}:latest
+                                    ${env.DOCKER_USER}/${project.artifactId}:${docker.image.tag}
                                 </tags>
                                 <publish>true</publish>
                             </image>
