@@ -560,10 +560,10 @@
                             <skip>${skip.docker.publish}</skip>
                             <image>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <name>${env.DOCKER_USER}/${project.artifactId}:latest</name>
+                                <name>${env.DOCKER_USER}/${project.artifactId}:${project.version}</name>
                                 <tags>
                                     <!--suppress UnresolvedMavenProperty -->
-                                    ${env.DOCKER_USER}/${project.artifactId}:${project.version}
+                                    ${env.DOCKER_USER}/${project.artifactId}:latest
                                 </tags>
                                 <publish>true</publish>
                             </image>
