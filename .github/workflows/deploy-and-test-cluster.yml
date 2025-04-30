@@ -101,14 +101,14 @@ jobs:
           kubectl get events --sort-by=.metadata.creationTimestamp -n default
           
           echo "--- Show Logs (if pods exist)"
-          PODS=$(kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -o jsonpath="{.items[*].metadata.name}" -n default)
+          PODS=$(kubectl get pods -l app=$APPLICATION_NAME -o jsonpath="{.items[*].metadata.name}" -n default)
           if [ -n "$PODS" ]; then
             for POD in $PODS; do
               echo "Logs for pod $POD:"
               kubectl logs $POD -n default --all-containers
             done
           else
-            echo "No pods found with label app.kubernetes.io/name=$APPLICATION_NAME in default namespace"
+            echo "No pods found with label app=$APPLICATION_NAME in default namespace"
             echo "Listing all pods in default namespace:"
             kubectl get pods -n default
           fi      
