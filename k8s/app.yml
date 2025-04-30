@@ -28,6 +28,10 @@ spec:
       labels:
         app: sdjpa-intro
     spec:
+      initContainers:
+        - name: wait-for-mysql
+          image: busybox:1.37.0
+          command: [ 'sh', '-c', 'until nc -z mysql 3306; do echo waiting for mysql; sleep 2; done;' ]
       containers:
         - name: sdjpa-intro
           image: domboeckli/sdjpa-intro:@project.version@
