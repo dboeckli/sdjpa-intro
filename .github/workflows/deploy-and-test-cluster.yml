@@ -97,6 +97,9 @@ jobs:
           echo "--- Describe pods:"
           kubectl describe pods -n default
           
+          echo "--- Services:"
+          kubectl get services -n default
+          
           echo "--- Show Events:"
           kubectl get events --sort-by=.metadata.creationTimestamp -n default
           
