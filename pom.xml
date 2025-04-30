@@ -349,10 +349,10 @@
                         <configuration>
                             <target>
                                 <propertyfile file="${project.build.directory}/helm.properties">
-                                    <entry key="helm.chart.version" value="${project.version}" />
+                                    <entry key="helm.chart.version" value="v${project.version}" />
                                 </propertyfile>
                                 <replaceregexp file="${project.build.directory}/helm.properties"
-                                               match="helm\.chart\.version=([0-9]+\.[0-9]+\.[0-9]+)_.*-SNAPSHOT"
+                                               match="helm\.chart\.version=(v[0-9]+\.[0-9]+\.[0-9]+)_.*-SNAPSHOT"
                                                replace="helm.chart.version=\1-${git.commit.id.abbrev}"
                                                byline="true" />
                                 <property file="${project.build.directory}/helm.properties" />
