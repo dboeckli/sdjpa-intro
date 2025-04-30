@@ -64,7 +64,7 @@ jobs:
           mvn -B versions:set -e -DnewVersion="$VERSION"
           mvn -B process-resources
           cat target/k8s/app.yaml
-          echo "Deploying Applicaion"
+          echo "Deploying Application $APPLICATION_NAME with version $VERSION"
           kubectl apply -f target/k8s/ --v=6
 
       - name: Wait for Pods to be ready
