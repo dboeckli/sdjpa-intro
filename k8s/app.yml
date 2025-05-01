@@ -2,39 +2,39 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: sdjpa-intro
+  name: @project.artifactId@
 spec:
   type: NodePort
   ports:
     - port: 80
       targetPort: 8080
   selector:
-    app: sdjpa-intro
+    app: @project.artifactId@
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: sdjpa-intro
+  name: @project.artifactId@
   labels:
-    app: sdjpa-intro
+    app: @project.artifactId@
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: sdjpa-intro
+      app: @project.artifactId@
   template:
     metadata:
       labels:
-        app: sdjpa-intro
+        app: @project.artifactId@
     spec:
       initContainers:
         - name: wait-for-mysql
           image: busybox:1.37.0
           command: [ 'sh', '-c', 'until nc -z mysql 3306; do echo "[busybox: wait-for-mysql] waiting for mysql"; sleep 2; done; echo "[busybox: wait-for-mysql] mysql is available"' ]
       containers:
-        - name: sdjpa-intro
-          image: domboeckli/sdjpa-intro:@project.version@
+        - name: @project.artifactId@
+          image: domboeckli/@project.artifactId@:@project.version@
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: mysql
