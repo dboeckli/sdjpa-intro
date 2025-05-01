@@ -44,16 +44,28 @@ jobs:
       - name: Check out the repository
         uses: actions/checkout@v4
 
+      - name: Set up java 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: 21
+          distribution: 'temurin'
+          cache: 'maven'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml.
+          settings-path: ${{ github.workspace }} # location for t
+
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.12.0
 
       - name: Deploy application
         env:
           APPLICATION_NAME: ${{ inputs.application-name }}
+          VERSION: ${{ inputs.version }}
         run: |
-          # Replace the version placeholder in the deployment manifest
-          sed -i 's|image: domboeckli/$APPLICATION_NAME:[^[:space:]]*|image: domboeckli/$APPLICATION_NAME:${{ inputs.version }}|g' k8s/app.yml
-          kubectl apply -f k8s/
+          mvn -B versions:set -e -DnewVersion="$VERSION"
+          mvn -B process-resources
+          cat target/k8s/app.yml
+          echo "Deploying Application $APPLICATION_NAME with version $VERSION"
+          kubectl apply -f target/k8s/ --v=6
 
       - name: Wait for Pods to be ready
         env:
@@ -75,9 +87,34 @@ jobs:
       - name: Display Deployment Information
         env:
           APPLICATION_NAME: ${{ inputs.application-name }}
+        if: always()
         run: |
           echo "Deployment Information:"
-          kubectl get deployment $APPLICATION_NAME -o yaml
+          
+          echo "--- Pods:"
+          kubectl get pods -n default
+          
+          echo "--- Describe pods:"
+          kubectl describe pods -n default
+          
+          echo "--- Services:"
+          kubectl get services -n default
+          
+          echo "--- Show Events:"
+          kubectl get events --sort-by=.metadata.creationTimestamp -n default
+          
+          echo "--- Show Logs (if pods exist)"
+          PODS=$(kubectl get pods -l app=$APPLICATION_NAME -o jsonpath="{.items[*].metadata.name}" -n default)
+          if [ -n "$PODS" ]; then
+            for POD in $PODS; do
+              echo "Logs for pod $POD:"
+              kubectl logs $POD -n default --all-containers
+            done
+          else
+            echo "No pods found with label app=$APPLICATION_NAME in default namespace"
+            echo "Listing all pods in default namespace:"
+            kubectl get pods -n default
+          fi      
           
   deploy-app-with-helm:
     runs-on: ubuntu-latest

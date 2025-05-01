@@ -33,6 +33,7 @@
         <skip.docker.build>false</skip.docker.build>
         <skip.docker.publish>true</skip.docker.publish>
         <skip.start.stop.springboot>false</skip.start.stop.springboot>
+        <docker.image.tag>development</docker.image.tag> <!-- for feature branches -->
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
@@ -90,6 +91,31 @@
             <properties>
                 <github.acions.build>true</github.acions.build>
                 <skip.docker.publish>false</skip.docker.publish>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>main-branch</id>
+            <activation>
+                <property>
+                    <name>env.GITHUB_REF</name>
+                    <value>refs/heads/main</value>
+                </property>
+            </activation>
+            <properties>
+                <docker.image.tag>latest</docker.image.tag>
+            </properties>
+        </profile>
+        <profile>
+            <id>master-branch</id>
+            <activation>
+                <property>
+                    <name>env.GITHUB_REF</name>
+                    <value>refs/heads/master</value>
+                </property>
+            </activation>
+            <properties>
+                <docker.image.tag>latest</docker.image.tag>
             </properties>
         </profile>
     </profiles>
@@ -323,10 +349,10 @@
                         <configuration>
                             <target>
                                 <propertyfile file="${project.build.directory}/helm.properties">
-                                    <entry key="helm.chart.version" value="${project.version}" />
+                                    <entry key="helm.chart.version" value="v${project.version}" />
                                 </propertyfile>
                                 <replaceregexp file="${project.build.directory}/helm.properties"
-                                               match="helm\.chart\.version=([0-9]+\.[0-9]+\.[0-9]+)_.*-SNAPSHOT"
+                                               match="helm\.chart\.version=(v[0-9]+\.[0-9]+\.[0-9]+)_.*-SNAPSHOT"
                                                replace="helm.chart.version=\1-${git.commit.id.abbrev}"
                                                byline="true" />
                                 <property file="${project.build.directory}/helm.properties" />
@@ -363,13 +389,35 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
+
+                    <execution>
+                        <id>copy-and-filter-k8s-yaml-to-target</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}/k8s</outputDirectory>
+                            <includeEmptyDirs>true</includeEmptyDirs>
+                            <resources>
+                                <resource>
+                                    <directory>k8s</directory>
+                                    <filtering>true</filtering>
+                                    <includes>
+                                        <include>**/*</include>
+                                    </includes>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+
                     <!--
                         This execution copies helm charts and puts them into the target directory 'helm-charts'. The helm charts are used to deploy the project.
                         During the build some variables are resolved by maven filtering (e.g. the project version).
                     -->
                     <execution>
                         <id>copy-and-filter-helm-charts-to-target</id>
-                        <phase>generate-resources</phase>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>copy-resources</goal>
                         </goals>
@@ -491,7 +539,7 @@
                         <configuration>
                             <skip>${skip.docker.build}</skip>
                             <image>
-                                <name>local/${project.artifactId}:latest</name>
+                                <name>local/${project.artifactId}:${docker.image.tag}</name>
                                 <tags>
                                     local/${project.artifactId}:${project.version}
                                 </tags>
@@ -509,7 +557,7 @@
                         <configuration>
                             <skip>${skip.docker.publish}</skip>
                             <image>
-                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:latest</name>
+                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:${docker.image.tag}</name>
                                 <tags>
                                     ghcr.io/${project.organization.name}/${project.artifactId}:${project.version}
                                 </tags>
@@ -538,10 +586,10 @@
                             <skip>${skip.docker.publish}</skip>
                             <image>
                                 <!--suppress UnresolvedMavenProperty -->
-                                <name>${env.DOCKER_USER}/${project.artifactId}:latest</name>
+                                <name>${env.DOCKER_USER}/${project.artifactId}:${project.version}</name>
                                 <tags>
                                     <!--suppress UnresolvedMavenProperty -->
-                                    ${env.DOCKER_USER}/${project.artifactId}:${project.version}
+                                    ${env.DOCKER_USER}/${project.artifactId}:${docker.image.tag}
                                 </tags>
                                 <publish>true</publish>
                             </image>
