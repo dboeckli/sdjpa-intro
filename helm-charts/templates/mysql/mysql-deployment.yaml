@@ -31,8 +31,6 @@ spec:
             - secretRef:
                 name: {{ include "application-template.fullname" . }}-mysql-secrets
           args:
-            - --general-log=1
-            - --general-log-file=/var/log/mysql/mysql.log
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci
           ports:
