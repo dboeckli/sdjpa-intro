@@ -193,6 +193,11 @@ jobs:
             for POD in $PODS; do
               echo "Logs for pod $POD:"
               kubectl logs $POD -n $NAMESPACE --all-containers
+          
+              if [[ $POD == *-mysql ]]; then
+                echo "General MySQL log for pod $POD:"
+                kubectl exec $POD -n $NAMESPACE -- cat /var/log/mysql/mysql.log || echo "Failed to retrieve MySQL log"
+              fi
             done
           else
             echo "No pods found with label app.kubernetes.io/name=$APPLICATION_NAME in $NAMESPACE namespace"
