@@ -138,7 +138,7 @@ jobs:
           DOCKER_USER: ${{ vars.DOCKER_USER }}
           APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
-          echo "Pulling Helm Chart Version: $HELM_CHART_VERSION"
+          echo "Pulling Helm Chart Version: $HELM_CHART_VERSION from oci://registry-1.docker.io/$DOCKER_USER/$APPLICATION_NAME"
           helm pull oci://registry-1.docker.io/$DOCKER_USER/$APPLICATION_NAME --version "$HELM_CHART_VERSION"
           tar -xvf $APPLICATION_NAME-*.tgz  
 
@@ -148,7 +148,7 @@ jobs:
           APPLICATION_NAME: ${{ inputs.application-name }}
         run: |
           # Install/upgrade the Helm chart
-          echo "Deploying Application: $APP_VERSION"
+          echo "Deploying Application $APPLICATION_NAME: $APP_VERSION"
           helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME \
           --set image.tag=${APP_VERSION} \
           --wait --timeout 5m \
