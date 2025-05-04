@@ -7,6 +7,7 @@ metadata:
     {{- include "application-template.labels" . | nindent 4 }}
 data:
   init.sql: |-
+    echo "[MySQL Init] Starting database initialization..."
     DROP DATABASE IF EXISTS {{ .Values.mysql.database }};
     DROP USER IF EXISTS `{{ .Values.mysql.adminUser }}`@`%`;
     DROP USER IF EXISTS `{{ .Values.mysql.user }}`@`%`;
