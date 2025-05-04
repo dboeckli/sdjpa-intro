@@ -33,6 +33,8 @@ spec:
           args:
             - --general-log=1
             - --general-log-file=/dev/stdout
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
           ports:
             - name: mysql
               containerPort: {{ .Values.mysql.port }}
