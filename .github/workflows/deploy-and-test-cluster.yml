@@ -191,12 +191,14 @@ jobs:
           PODS=$(kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -o jsonpath="{.items[*].metadata.name}" -n $NAMESPACE)
           if [ -n "$PODS" ]; then
             for POD in $PODS; do
-              echo "Logs for pod $POD:"
+              echo "---------------- Logs for pod $POD:"
               kubectl logs $POD -n $NAMESPACE --all-containers
+              echo "---------------- End of Logs for pod $POD:"
           
-              if [[ $POD == *-mysql ]]; then
-                echo "General MySQL log for pod $POD:"
+              if [[ $POD == *-mysql-* ]]; then
+                echo "---------------- General MySQL log for pod $POD:"
                 kubectl exec $POD -n $NAMESPACE -- cat /var/log/mysql/mysql.log || echo "Failed to retrieve MySQL log"
+                echo "---------------- End of General MySQL log for pod $POD"
               fi
             done
           else
