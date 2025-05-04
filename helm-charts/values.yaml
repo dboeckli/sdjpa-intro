@@ -59,10 +59,12 @@ mysql:
     repository: mysql
     tag: "8.4.4"
     pullPolicy: IfNotPresent
+
   database: bookdb
 
   adminUser: bookadmin
   adminPassword: password
+
   user: bookuser
   password: password
 

@@ -30,12 +30,9 @@ spec:
               value: {{ .Values.spring.profiles.active | default "local" }}
             - name: SPRING_DATASOURCE_URL
               value: {{ .Values.spring.datasource.url }}
-            - name: SPRING_DATASOURCE_USERNAME
-              value: {{ .Values.mysql.user }}
-            - name: SPRING_DATASOURCE_PASSWORD
-              value: {{ .Values.mysql.password }}
-            - name: SPRING_APPLICATION_JSON
-              value: {{ .Values.springApplicationJson | toJson | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ include "application-template.fullname" . }}-mysql-secrets
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
