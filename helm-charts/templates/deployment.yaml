@@ -28,6 +28,10 @@ spec:
               value: "{{ .Values.global.timezone }}"
             - name: SPRING_PROFILES_ACTIVE
               value: {{ .Values.spring.profiles.active | default "local" }}
+            - name: SPRING_LIQUIBASE_ENABLED
+              value: "true"
+            - name: SPRING_FLYWAY_ENABLED
+              value: "false"
             - name: SPRING_DATASOURCE_URL
               value: {{ .Values.spring.datasource.url }}
           envFrom:
