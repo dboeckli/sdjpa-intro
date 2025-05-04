@@ -20,20 +20,22 @@ spec:
     spec:
       containers:
         - name: mysql
-          image: "{{ .Values.mysql.image.repository }}:{{ .Values.mysql.image.tag }}"
-          imagePullPolicy: {{ .Values.mysql.image.pullPolicy }}
+          image: mysql:8.4.4
+          imagePullPolicy: IfNotPresent
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: {{ .Values.mysql.rootPassword }}
-            - name: MYSQL_USER
-              value: {{ .Values.mysql.user }}
-            - name: MYSQL_PASSWORD
-              value: {{ .Values.mysql.password }}
             - name: MYSQL_DATABASE
               value: {{ .Values.mysql.database }}
+            - name: MYSQL_LOG_CONSOLE
+              value: "true"
+          envFrom:
+            - secretRef:
+                name: {{ include "application-template.fullname" . }}-mysql-secrets
+          args:
+            - --character-set-server=utf8mb4
+            - --collation-server=utf8mb4_unicode_ci
           ports:
             - name: mysql
-              containerPort: 3306
+              containerPort: {{ .Values.mysql.port }}
               protocol: TCP
           volumeMounts:
             - name: mysql-data
