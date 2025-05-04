@@ -23,17 +23,14 @@ spec:
           image: mysql:8.4.4
           imagePullPolicy: IfNotPresent
           env:
-            - name: MYSQL_ROOT_PASSWORD
-              value: {{ .Values.mysql.rootPassword }}
-            - name: MYSQL_USER
-              value: {{ .Values.mysql.user }}
-            - name: MYSQL_PASSWORD
-              value: {{ .Values.mysql.password }}
             - name: MYSQL_DATABASE
               value: {{ .Values.mysql.database }}
+          envFrom:
+            - secretRef:
+                name: {{ include "application-template.fullname" . }}-mysql-secrets
           ports:
             - name: mysql
-              containerPort: 3306
+              containerPort: {{ .Values.mysql.port }}
               protocol: TCP
           volumeMounts:
             - name: mysql-data
