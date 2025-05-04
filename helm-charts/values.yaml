@@ -3,7 +3,6 @@ replicaCount: 1
 image:
   repository: domboeckli/@project.artifactId@
   tag: @project.version@
-  pullPolicy: IfNotPresent
 
 # Namespace configuration
 # This defines the Kubernetes namespace where the resources will be deployed
@@ -55,12 +54,8 @@ probes:
     failureThreshold: 6
 
 mysql:
-  image:
-    repository: mysql
-    tag: "8.4.4"
-    pullPolicy: IfNotPresent
-
   database: bookdb
+  port: 3306
 
   adminUser: bookadmin
   adminPassword: password
