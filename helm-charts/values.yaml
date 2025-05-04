@@ -30,15 +30,6 @@ global:
 spring:
   profiles:
     active: mysql
-  datasource:
-    url: jdbc:mysql://sdjpa-intro-mysql:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
-
-springApplicationJson:
-  management:
-    endpoint:
-      health:
-        probes:
-          add-additional-paths: true
 
 probes:
   startup:
