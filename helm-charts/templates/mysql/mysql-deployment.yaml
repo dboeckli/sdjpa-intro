@@ -25,9 +25,14 @@ spec:
           env:
             - name: MYSQL_DATABASE
               value: {{ .Values.mysql.database }}
+            - name: MYSQL_LOG_CONSOLE
+              value: "true"
           envFrom:
             - secretRef:
                 name: {{ include "application-template.fullname" . }}-mysql-secrets
+          args:
+            - --general-log=1
+            - --general-log-file=/dev/stdout
           ports:
             - name: mysql
               containerPort: {{ .Values.mysql.port }}
