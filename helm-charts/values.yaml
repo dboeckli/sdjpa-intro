@@ -3,7 +3,6 @@ replicaCount: 1
 image:
   repository: domboeckli/@project.artifactId@
   tag: @project.version@
-  pullPolicy: IfNotPresent
 
 # Namespace configuration
 # This defines the Kubernetes namespace where the resources will be deployed
@@ -31,15 +30,6 @@ global:
 spring:
   profiles:
     active: mysql
-  datasource:
-    url: jdbc:mysql://sdjpa-intro-mysql:3306/bookdb?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
-
-springApplicationJson:
-  management:
-    endpoint:
-      health:
-        probes:
-          add-additional-paths: true
 
 probes:
   startup:
@@ -55,14 +45,12 @@ probes:
     failureThreshold: 6
 
 mysql:
-  image:
-    repository: mysql
-    tag: "8.4.4"
-    pullPolicy: IfNotPresent
   database: bookdb
+  port: 3306
 
   adminUser: bookadmin
   adminPassword: password
+
   user: bookuser
   password: password
 
