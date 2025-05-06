@@ -557,9 +557,9 @@
                         <configuration>
                             <skip>${skip.docker.publish}</skip>
                             <image>
-                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:${docker.image.tag}</name>
+                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:${project.version}</name>
                                 <tags>
-                                    ghcr.io/${project.organization.name}/${project.artifactId}:${project.version}
+                                    ghcr.io/${project.organization.name}/${project.artifactId}:${docker.image.tag}
                                 </tags>
                                 <publish>true</publish>
                             </image>
