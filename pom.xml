@@ -269,8 +269,8 @@
                         <exclude>.mvn/**</exclude>
                         <exclude>.idea/**</exclude>
                         <exclude>**/banner.txt</exclude>
-                        <exclude>mvn</exclude>
-                        <exclude>mvn.cmd</exclude>
+                        <exclude>mvnw</exclude>
+                        <exclude>mvnw.cmd</exclude>
                     </excludes>
                 </configuration>
             </plugin>
