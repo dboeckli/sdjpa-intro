@@ -28,16 +28,17 @@
 
     <properties>
         <java.version>21</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
 
         <github.acions.build>false</github.acions.build>
         <skip.docker.build>false</skip.docker.build>
         <skip.docker.publish>true</skip.docker.publish>
         <skip.start.stop.springboot>false</skip.start.stop.springboot>
-        <docker.image.tag>development</docker.image.tag> <!-- for feature branches -->
 
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
+        <docker.image.tag>development</docker.image.tag> <!-- for feature branches -->
+        <docker.repo>local</docker.repo>
 
         <logbook.version>3.12.0</logbook.version>
         <logstash-logback.version>8.1</logstash-logback.version>
@@ -91,6 +92,7 @@
             <properties>
                 <github.acions.build>true</github.acions.build>
                 <skip.docker.publish>false</skip.docker.publish>
+                <docker.repo>domboeckli</docker.repo>
             </properties>
         </profile>
 
@@ -267,8 +269,8 @@
                         <exclude>.mvn/**</exclude>
                         <exclude>.idea/**</exclude>
                         <exclude>**/banner.txt</exclude>
-                        <exclude>mvn</exclude>
-                        <exclude>mvn.cmd</exclude>
+                        <exclude>mvnw</exclude>
+                        <exclude>mvnw.cmd</exclude>
                     </excludes>
                 </configuration>
             </plugin>
@@ -351,6 +353,7 @@
                                 <propertyfile file="${project.build.directory}/helm.properties">
                                     <entry key="helm.chart.version" value="v${project.version}" />
                                 </propertyfile>
+                                <!--suppress UnresolvedMavenProperty -->
                                 <replaceregexp file="${project.build.directory}/helm.properties"
                                                match="helm\.chart\.version=(v[0-9]+\.[0-9]+\.[0-9]+)_.*-SNAPSHOT"
                                                replace="helm.chart.version=\1-${git.commit.id.abbrev}"
@@ -539,9 +542,9 @@
                         <configuration>
                             <skip>${skip.docker.build}</skip>
                             <image>
-                                <name>local/${project.artifactId}:${docker.image.tag}</name>
+                                <name>local/${project.artifactId}:${project.version}</name>
                                 <tags>
-                                    local/${project.artifactId}:${project.version}
+                                    local/${project.artifactId}:${docker.image.tag}
                                 </tags>
                                 <publish>false</publish>
                             </image>
@@ -557,9 +560,9 @@
                         <configuration>
                             <skip>${skip.docker.publish}</skip>
                             <image>
-                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:${docker.image.tag}</name>
+                                <name>ghcr.io/${project.organization.name}/${project.artifactId}:${project.version}</name>
                                 <tags>
-                                    ghcr.io/${project.organization.name}/${project.artifactId}:${project.version}
+                                    ghcr.io/${project.organization.name}/${project.artifactId}:${docker.image.tag}
                                 </tags>
                                 <publish>true</publish>
                             </image>
@@ -616,6 +619,7 @@
 
                 <configuration>
                     <chartDirectory>${project.build.directory}/helm-charts/</chartDirectory>
+                    <!--suppress UnresolvedMavenProperty -->
                     <chartVersion>${helm.chart.version}</chartVersion>
                     <skipLint>true</skipLint>
                     <useLocalHelmBinary>true</useLocalHelmBinary>
@@ -668,7 +672,9 @@
                             <uploadRepoStable>
                                 <name>stable-repo</name>
                                 <url>registry-1.docker.io</url>
+                                <!--suppress UnresolvedMavenProperty -->
                                 <username>${env.DOCKER_USER}</username>  <!-- registry username -->
+                                <!--suppress UnresolvedMavenProperty -->
                                 <password>${env.DOCKER_TOKEN}</password> <!-- registry password or identity token -->
                             </uploadRepoStable>
                         </configuration>
@@ -683,6 +689,7 @@
                             <skipPushLogin>true</skipPushLogin>
                             <uploadRepoStable>
                                 <name>stable-repo</name>
+                                <!--suppress UnresolvedMavenProperty -->
                                 <url>registry-1.docker.io/${env.DOCKER_USER}</url>
                             </uploadRepoStable>
                         </configuration>

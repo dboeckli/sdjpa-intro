@@ -8,6 +8,7 @@ spec:
   ports:
     - port: 80
       targetPort: 8080
+      nodePort: 30080
   selector:
     app: @project.artifactId@
 
@@ -34,7 +35,7 @@ spec:
           command: [ 'sh', '-c', 'until nc -z mysql 3306; do echo "[busybox: wait-for-mysql] waiting for mysql"; sleep 2; done; echo "[busybox: wait-for-mysql] mysql is available"' ]
       containers:
         - name: @project.artifactId@
-          image: domboeckli/@project.artifactId@:@project.version@
+          image: @docker.repo@/@project.artifactId@:@project.version@
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: mysql

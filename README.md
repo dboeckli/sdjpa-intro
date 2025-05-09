@@ -41,16 +41,18 @@ When updating 'src/scripts/init-mysql-liquibase.sql', apply the changes to the K
 kubectl create configmap mysql-init-script --from-file=init.sql=src/scripts/init-mysql-liquibase.sql --dry-run=client -o yaml | Out-File -Encoding utf8 k8s/mysql-init-script-configmap.yaml
 ```
 
-### Deployment
+### Deployment with Kubernetes
+
+Deployment goes into the default namespace.
 
 To deploy all resources:
 ```bash
-kubectl apply -f k8s/
+kubectl apply -f target/k8s/
 ```
 
 To remove all resources:
 ```bash
-kubectl delete -f k8s/
+kubectl delete -f target/k8s/
 ```
 
 Check
@@ -58,6 +60,45 @@ Check
 kubectl get deployments -o wide
 kubectl get pods -o wide
 ```
+
+You can use the actuator rest call to verify via port 30080
+
+## Deployment with Helm
+
+Be aware that we are using a different namespace here (not default).
+
+Go to the directory where the tgz file has been created after 'mvn install'
+```powershell
+cd target/helm/repo
+```
+
+unpack
+```powershell
+$file = Get-ChildItem -Filter *.tgz | Select-Object -First 1
+tar -xvf $file.Name
+```
+
+install
+```powershell
+$APPLICATION_NAME = Get-ChildItem -Directory | Where-Object { $_.LastWriteTime -ge $file.LastWriteTime } | Select-Object -ExpandProperty Name
+helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --namespace sdjpa-intro --create-namespace --wait --timeout 5m --debug
+```
+
+show logs 
+```powershell
+kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -n sdjpa-intro
+```
+replace $POD with pods from the command above
+```powershell
+kubectl logs $POD -n sdjpa-intro --all-containers
+```
+
+uninstall
+```powershell
+helm uninstall $APPLICATION_NAME  --namespace sdjpa-intro
+```
+
+You can use the actuator rest call to verify via port 30080
 
 ## Running the Application
 1. Choose between Liquibase (default) or Flyway for database schema management. (you can use one of the preconfigured intellij runners)

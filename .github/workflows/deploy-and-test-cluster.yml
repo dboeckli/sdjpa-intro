@@ -146,11 +146,14 @@ jobs:
         env:
           APP_VERSION: ${{ inputs.version }}
           APPLICATION_NAME: ${{ inputs.application-name }}
+          NAMESPACE: ${{ inputs.namespace }}
         run: |
           # Install/upgrade the Helm chart
           echo "Deploying Application $APPLICATION_NAME: $APP_VERSION"
           helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME \
           --set image.tag=${APP_VERSION} \
+          --namespace ${NAMESPACE} \
+          --create-namespace \
           --wait --timeout 5m \
           --debug
 
