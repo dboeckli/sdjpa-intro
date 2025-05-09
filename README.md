@@ -43,6 +43,8 @@ kubectl create configmap mysql-init-script --from-file=init.sql=src/scripts/init
 
 ### Deployment with Kubernetes
 
+Deployment goes into the default namespace.
+
 To deploy all resources:
 ```bash
 kubectl apply -f target/k8s/
@@ -79,7 +81,7 @@ tar -xvf $file.Name
 install
 ```powershell
 $APPLICATION_NAME = Get-ChildItem -Directory | Where-Object { $_.LastWriteTime -ge $file.LastWriteTime } | Select-Object -ExpandProperty Name
-helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --wait --timeout 5m --debug
+helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --namespace sdjpa-intro --create-namespace --wait --timeout 5m --debug
 ```
 
 show logs 
@@ -93,7 +95,7 @@ kubectl logs $POD -n sdjpa-intro --all-containers
 
 uninstall
 ```powershell
-helm uninstall $APPLICATION_NAME
+helm uninstall $APPLICATION_NAME  --namespace sdjpa-intro
 ```
 
 You can use the actuator rest call to verify via port 30080
