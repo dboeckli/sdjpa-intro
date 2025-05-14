@@ -42,6 +42,12 @@ spec:
               mountPath: /var/lib/mysql
             - name: mysql-init-script
               mountPath: /docker-entrypoint-initdb.d
+          readinessProbe:
+            tcpSocket:
+              port: {{ .Values.mysql.port }}
+          livenessProbe:
+            tcpSocket:
+              port: {{ .Values.mysql.port }}
       volumes:
         - name: mysql-data
           emptyDir: { }
