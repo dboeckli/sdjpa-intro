@@ -74,7 +74,7 @@ cd target/helm/repo
 
 unpack
 ```powershell
-$file = Get-ChildItem -Filter *.tgz | Select-Object -First 1
+$file = Get-ChildItem -Filter sdjpa-intro-v*.tgz | Select-Object -First 1
 tar -xvf $file.Name
 ```
 
@@ -84,13 +84,25 @@ $APPLICATION_NAME = Get-ChildItem -Directory | Where-Object { $_.LastWriteTime -
 helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --namespace sdjpa-intro --create-namespace --wait --timeout 5m --debug
 ```
 
-show logs 
+show logs and show event
 ```powershell
-kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -n sdjpa-intro
+kubectl get pods -n sdjpa-intro
 ```
 replace $POD with pods from the command above
 ```powershell
 kubectl logs $POD -n sdjpa-intro --all-containers
+```
+
+Show Details and Event
+
+$POD_NAME can be: sdjpa-intro-mysql, sdjpa-intro
+```powershell
+kubectl describe pod $POD_NAME -n sdjpa-intro
+```
+
+Show Endpoints
+```powershell
+kubectl get endpoints -n sdjpa-intro
 ```
 
 uninstall

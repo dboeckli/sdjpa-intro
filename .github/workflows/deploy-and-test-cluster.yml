@@ -140,7 +140,7 @@ jobs:
         run: |
           echo "Pulling Helm Chart Version: $HELM_CHART_VERSION from oci://registry-1.docker.io/$DOCKER_USER/$APPLICATION_NAME"
           helm pull oci://registry-1.docker.io/$DOCKER_USER/$APPLICATION_NAME --version "$HELM_CHART_VERSION"
-          tar -xvf $APPLICATION_NAME-*.tgz  
+          tar -xvf $APPLICATION_NAME-v*.tgz  
 
       - name: Deploy application with Helm
         env:
@@ -191,7 +191,8 @@ jobs:
           kubectl get events --sort-by=.metadata.creationTimestamp -n $NAMESPACE
           
           echo "--- Show Logs (if pods exist)"
-          PODS=$(kubectl get pods -l app.kubernetes.io/name=$APPLICATION_NAME -o jsonpath="{.items[*].metadata.name}" -n $NAMESPACE)
+          PODS=$(kubectl get pods -o jsonpath="{.items[*].metadata.name}" -n $NAMESPACE)
+          echo "Found pods: $PODS"
           if [ -n "$PODS" ]; then
             for POD in $PODS; do
               echo "---------------- Logs for pod $POD:"
