@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "application-template.fullname" . }}-mysql
-  namespace: {{ .Values.deployment.namespace }}
+  name: {{ include "sdjpa-intro-mysql.fullname" . }}
+  namespace: {{ .Values.global.namespace }}
   labels:
-    {{- include "application-template.labels" . | nindent 4 }}
+    {{- include "sdjpa-intro-mysql.labels" . | nindent 4 }}
     app.kubernetes.io/component: database
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "application-template.selectorLabels" . | nindent 6 }}
+      {{- include "sdjpa-intro-mysql.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: database
   template:
     metadata:
       labels:
-        {{- include "application-template.selectorLabels" . | nindent 8 }}
+        {{- include "sdjpa-intro-mysql.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: database
     spec:
       containers:
@@ -29,7 +29,7 @@ spec:
               value: "true"
           envFrom:
             - secretRef:
-                name: {{ include "application-template.fullname" . }}-mysql-secrets
+                name: {{ include "sdjpa-intro-mysql.fullname" . }}-secrets
           args:
             - --character-set-server=utf8mb4
             - --collation-server=utf8mb4_unicode_ci
@@ -42,9 +42,29 @@ spec:
               mountPath: /var/lib/mysql
             - name: mysql-init-script
               mountPath: /docker-entrypoint-initdb.d
+          readinessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
+          livenessProbe:
+            exec:
+              command:
+                - /bin/sh
+                - -c
+                - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 5
       volumes:
         - name: mysql-data
           emptyDir: { }
         - name: mysql-init-script
           configMap:
-            name: {{ include "application-template.fullname" . }}-mysql-init
+            name: {{ include "sdjpa-intro-mysql.fullname" . }}-mysql-init
