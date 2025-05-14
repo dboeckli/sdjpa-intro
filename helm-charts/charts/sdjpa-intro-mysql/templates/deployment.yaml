@@ -42,26 +42,6 @@ spec:
               mountPath: /var/lib/mysql
             - name: mysql-init-script
               mountPath: /docker-entrypoint-initdb.d
-          readinessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
-          livenessProbe:
-            exec:
-              command:
-                - /bin/sh
-                - -c
-                - "mysqladmin ping -u root -p${MYSQL_ROOT_PASSWORD}"
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 5
       volumes:
         - name: mysql-data
           emptyDir: { }
