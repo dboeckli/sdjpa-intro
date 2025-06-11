@@ -4,7 +4,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.4.5</version>
+        <version>3.5.0</version>
         <relativePath /> <!-- lookup parent from repository -->
     </parent>
 
@@ -40,10 +40,10 @@
         <docker.image.tag>development</docker.image.tag> <!-- for feature branches -->
         <docker.repo>local</docker.repo>
 
-        <logbook.version>3.12.0</logbook.version>
+        <logbook.version>3.12.1</logbook.version>
         <logstash-logback.version>8.1</logstash-logback.version>
         <editorconfig-maven-plugin.version>0.1.3</editorconfig-maven-plugin.version>
-        <liquibase-maven-plugin.version>4.31.1</liquibase-maven-plugin.version>
+        <liquibase-maven-plugin.version>4.32.0</liquibase-maven-plugin.version>
         <helm.plugin.version>6.17.0</helm.plugin.version>
         <properties-maven-plugin.version>1.2.1</properties-maven-plugin.version>
         <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
@@ -484,9 +484,10 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
                     <jvmArguments>-Dspring.application.admin.enabled=true</jvmArguments>
+                    <!-- Consider to disable that in production environment  -->
+                    <includeTools>true</includeTools>
                     <layers>
                         <enabled>true</enabled>
-                        <includeLayerTools>true</includeLayerTools>
                     </layers>
                     <excludes>
                         <exclude>
