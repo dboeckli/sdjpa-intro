@@ -49,3 +49,19 @@ Selector labels
 app.kubernetes.io/name: {{ include "application-template.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{/*
+Create the FQDN for the service
+*/}}
+{{- define "application-template.serviceFQDN" -}}
+{{- $fullname := include "application-template.fullname" . -}}
+{{- printf "%s.%s.svc.cluster.local" $fullname .Release.Namespace }}
+{{- end }}
+
+{{/*
+sdjpa-intro-mysql service FQDN
+*/}}
+{{- define "sdjpa-intro-mysql.serviceFQDN" -}}
+{{- $fullname := include "sdjpa-intro-mysql.fullname" . -}}
+{{- printf "%s-%s.%s.svc.cluster.local" $fullname "sdjpa-intro-mysql" .Release.Namespace }}
+{{- end -}}

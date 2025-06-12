@@ -105,6 +105,11 @@ Show Endpoints
 kubectl get endpoints -n sdjpa-intro
 ```
 
+test
+```powershell
+helm test $APPLICATION_NAME --namespace sdjpa-intro --logs
+```
+
 uninstall
 ```powershell
 helm uninstall $APPLICATION_NAME  --namespace sdjpa-intro
