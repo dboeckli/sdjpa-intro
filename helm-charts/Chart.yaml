@@ -10,4 +10,4 @@ appVersion: @project.version@
 dependencies:
   - name: sdjpa-intro-mysql
     version: @helm.chart.version@
-    repository: file://charts-mysql
+    repository: file://charts/mysql
