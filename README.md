@@ -9,7 +9,7 @@ Liquibase is enabled by default in the MySQL profile with the following properti
 - `spring.flyway.enabled = false`
 - `spring.docker.compose.file = compose-mysql-with-liquibase.yaml`
 
-This profile starts MySQL on port 3306 using the Docker Compose file `compose-mysql-with-liquibase.yaml`.
+This profile starts MySQL on port 3306 using the Docker Compose file `compose-mysql-with-liquibase.yaml`
 
 To generate the initial Liquibase changelog:
 
