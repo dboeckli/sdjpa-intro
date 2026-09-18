@@ -37,6 +37,7 @@ Both Docker Compose files (for mysql/liquibase and mysql/flyway) initially use t
 ### Generate Config Map for mysql init script
 
 When updating 'src/scripts/init-mysql-liquibase.sql', apply the changes to the Kubernetes ConfigMap:
+
 ```bash
 kubectl create configmap mysql-init-script --from-file=init.sql=src/scripts/init-mysql-liquibase.sql --dry-run=client -o yaml | Out-File -Encoding utf8 k8s/mysql-init-script-configmap.yaml
 ```
@@ -46,16 +47,19 @@ kubectl create configmap mysql-init-script --from-file=init.sql=src/scripts/init
 Deployment goes into the default namespace.
 
 To deploy all resources:
+
 ```bash
 kubectl apply -f target/k8s/
 ```
 
 To remove all resources:
+
 ```bash
 kubectl delete -f target/k8s/
 ```
 
 Check
+
 ```bash
 kubectl get deployments -o wide
 kubectl get pods -o wide
@@ -68,27 +72,33 @@ You can use the actuator rest call to verify via port 30080
 Be aware that we are using a different namespace here (not default).
 
 Go to the directory where the tgz file has been created after 'mvn install'
+
 ```powershell
 cd target/helm/repo
 ```
 
 unpack
+
 ```powershell
 $file = Get-ChildItem -Filter sdjpa-intro-v*.tgz | Select-Object -First 1
 tar -xvf $file.Name
 ```
 
 install
+
 ```powershell
 $APPLICATION_NAME = Get-ChildItem -Directory | Where-Object { $_.LastWriteTime -ge $file.LastWriteTime } | Select-Object -ExpandProperty Name
 helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --namespace sdjpa-intro --create-namespace --wait --timeout 5m --debug
 ```
 
 show logs and show event
+
 ```powershell
 kubectl get pods -n sdjpa-intro
 ```
+
 replace $POD with pods from the command above
+
 ```powershell
 kubectl logs $POD -n sdjpa-intro --all-containers
 ```
@@ -96,31 +106,37 @@ kubectl logs $POD -n sdjpa-intro --all-containers
 Show Details and Event
 
 $POD_NAME can be: sdjpa-intro-mysql, sdjpa-intro
+
 ```powershell
 kubectl describe pod $POD_NAME -n sdjpa-intro
 ```
 
 Show Endpoints
+
 ```powershell
 kubectl get endpoints -n sdjpa-intro
 ```
 
 test
+
 ```powershell
 helm test $APPLICATION_NAME --namespace sdjpa-intro --logs
 ```
 
 uninstall
+
 ```powershell
 helm uninstall $APPLICATION_NAME  --namespace sdjpa-intro
 ```
 
 delete all
+
 ```powershell
 kubectl delete all --all -n spring-6-project-template
 ```
 
 create busybox sidecar
+
 ```powershell
 kubectl run busybox-test --rm -it --image=busybox:1.36 --namespace=spring-6-project-template --command -- sh
 ```
@@ -128,6 +144,8 @@ kubectl run busybox-test --rm -it --image=busybox:1.36 --namespace=spring-6-proj
 You can use the actuator rest call to verify via port 30080
 
 ## Running the Application
+
 1. Choose between Liquibase (default) or Flyway for database schema management. (you can use one of the preconfigured intellij runners)
 2. Start the application with the appropriate profile and properties.
 3. The application will use Docker Compose to start MySQL and apply the database schema changes.
+

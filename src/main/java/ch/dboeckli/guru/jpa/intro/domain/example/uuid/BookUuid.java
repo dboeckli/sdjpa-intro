@@ -18,6 +18,7 @@ import java.util.UUID;
 @Setter
 @ToString
 public class BookUuid {
+
     @Id
     @GeneratedValue
     @UuidGenerator
@@ -25,6 +26,9 @@ public class BookUuid {
     private UUID id;
 
     private String title;
+
     private String isbn;
+
     private String publisher;
+
 }

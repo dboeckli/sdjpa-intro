@@ -15,7 +15,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @ActiveProfiles("test_mysql_with_liquibase")
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // to assure
+                                                                             // that it is
+                                                                             // not
+                                                                             // replaced
+                                                                             // with h2
 @Import(DataInitializer.class)
 @Slf4j
 class BookNaturalRepositoryWithMysqlAndLiquibaseIT {

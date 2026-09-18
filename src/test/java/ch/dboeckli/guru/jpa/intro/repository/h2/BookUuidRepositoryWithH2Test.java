@@ -14,7 +14,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @DataJpaTest
-// we are using the h2 in compatible mode with mysql. to assure that it is not replaced with h2
+// we are using the h2 in compatible mode with mysql. to assure that it is not replaced
+// with h2
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(DataInitializer.class)
 @Slf4j
@@ -40,4 +41,5 @@ class BookUuidRepositoryWithH2Test {
 
         bookUuidRepository.findAll().forEach(bookUuidFound -> log.info("BookUuid: " + bookUuidFound));
     }
+
 }

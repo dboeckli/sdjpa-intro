@@ -17,7 +17,9 @@ import org.springframework.stereotype.Component;
 public class DataInitializer implements CommandLineRunner {
 
     private final BookRepository bookRepository;
+
     private final AuthorUuidRepository authorUuidRepository;
+
     private final BookUuidRepository bookUuidRepository;
 
     @Override
@@ -50,4 +52,5 @@ public class DataInitializer implements CommandLineRunner {
 
         bookUuidRepository.findAll().forEach(bookUuidFound -> log.info("BookUuid: " + bookUuidFound));
     }
+
 }

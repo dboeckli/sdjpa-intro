@@ -20,4 +20,5 @@ public class AuthorEmbedded {
     private NameId nameId;
 
     private String country;
+
 }
