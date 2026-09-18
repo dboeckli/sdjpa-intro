@@ -149,6 +149,15 @@ jobs:
       - name: Create k8s Kind Cluster
         uses: helm/kind-action@v1.15.0
 
+      - name: Set up java
+        uses: actions/setup-java@v6
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'liberica'
+          cache: 'maven'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml.
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
       - name: show variables
         id: show_build_variables
         shell: bash
