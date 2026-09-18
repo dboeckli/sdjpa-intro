@@ -1,5 +1,5 @@
 apiVersion: v2
-name: sdjpa-intro-mysql
+name: sdjpa-intro-mysql-chart
 description: A Helm subchart for Mysql used in Spring 6 Reactive MongoDB application
 type: application
 version: @helm.chart.version@

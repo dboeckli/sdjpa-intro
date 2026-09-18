@@ -19,9 +19,9 @@ spec:
         - name: wait-for-mysql
           image: {{.Values.busyboxImage.repository }}:{{.Values.busyboxImage.tag }}
           imagePullPolicy: {{.Values.busyboxImage.pullPolicy }}
-          command: [ 'sh', '-c', 'until nc -z {{ .Release.Name }}-sdjpa-intro-mysql.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.mysql.port }}; do echo "[busybox: wait-for-mysql] waiting for mysql"; sleep 2; done; echo "[busybox: wait-for-mysql] mysql is available"' ]
+          command: [ 'sh', '-c', 'until nc -z {{ .Values.mysql.serviceFQDN }} {{ .Values.mysql.port }}; do echo "[busybox: wait-for-mysql] waiting for mysql"; sleep 2; done; echo "[busybox: wait-for-mysql] mysql is available"' ]
       containers:
-        - name: {{ .Chart.Name }}
+        - name: @project.artifactId@
           image: "{{ .Values.image.registry }}/@project.artifactId@:{{ .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
@@ -34,7 +34,7 @@ spec:
             - name: SPRING_FLYWAY_ENABLED
               value: "false"
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://{{ .Release.Name }}-sdjpa-intro-mysql.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.mysql.port }}/{{ .Values.mysql.database }}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
+              value: jdbc:mysql://{{ .Values.mysql.serviceFQDN }}:{{ .Values.mysql.port }}/{{ .Values.mysql.database }}?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&allowPublicKeyRetrieval=true&useSSL=false
           envFrom:
             - secretRef:
                 name: {{ include "application-template.fullname" . }}-spring-mysql-secrets

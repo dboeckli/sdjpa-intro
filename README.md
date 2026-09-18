@@ -80,7 +80,7 @@ cd target/helm/repo
 unpack
 
 ```powershell
-$file = Get-ChildItem -Filter sdjpa-intro-v*.tgz | Select-Object -First 1
+$file = Get-ChildItem -Filter sdjpa-intro-chart-*.tgz | Select-Object -First 1
 tar -xvf $file.Name
 ```
 
