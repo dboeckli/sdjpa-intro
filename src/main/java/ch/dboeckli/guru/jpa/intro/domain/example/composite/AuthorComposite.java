@@ -11,10 +11,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthorComposite {
+
     @Id
     private String firstName;
 
     @Id
     private String lastName;
+
     private String country;
+
 }

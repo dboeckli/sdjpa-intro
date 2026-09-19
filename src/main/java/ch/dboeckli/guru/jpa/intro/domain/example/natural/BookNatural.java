@@ -16,5 +16,7 @@ public class BookNatural {
     private String title;
 
     private String isbn;
+
     private String publisher;
+
 }

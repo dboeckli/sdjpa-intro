@@ -12,6 +12,9 @@ import java.io.Serializable;
 @Data
 @Embeddable
 public class NameId implements Serializable {
+
     private String firstName;
+
     private String lastName;
+
 }

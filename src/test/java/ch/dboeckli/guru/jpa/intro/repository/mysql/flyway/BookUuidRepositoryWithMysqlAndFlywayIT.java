@@ -18,7 +18,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ActiveProfiles("test_mysql_with_flyway")
 @DirtiesContext
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // to assure
+                                                                             // that it is
+                                                                             // not
+                                                                             // replaced
+                                                                             // with h2
 @Import(DataInitializer.class)
 @Slf4j
 class BookUuidRepositoryWithMysqlAndFlywayIT {
@@ -43,4 +47,5 @@ class BookUuidRepositoryWithMysqlAndFlywayIT {
 
         bookUuidRepository.findAll().forEach(bookUuidFound -> log.info("BookUuid: " + bookUuidFound));
     }
+
 }

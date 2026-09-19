@@ -16,7 +16,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ActiveProfiles("test_mysql_with_liquibase")
 @DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)  // to assure that it is not replaced with h2
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE) // to assure
+                                                                             // that it is
+                                                                             // not
+                                                                             // replaced
+                                                                             // with h2
 @Import(DataInitializer.class)
 @Slf4j
 class AuthorUuidRepositoryWithMysqlAndLiquibaseIT {
@@ -40,4 +44,5 @@ class AuthorUuidRepositoryWithMysqlAndLiquibaseIT {
 
         authorUuidRepository.findAll().forEach(authorUuidFound -> log.info("AuthorUuid: " + authorUuidFound));
     }
+
 }

@@ -1,3 +1,6 @@
+nameOverride: "sdjpa-intro"
+fullnameOverride: "sdjpa-intro"
+
 global:
   timezone: Europe/Zurich
   timezonePath: /etc/localtime
@@ -44,6 +47,10 @@ probes:
     failureThreshold: 6
 
 mysql:
+  enabled: true
+  fullnameOverride: "sdjpa-intro-mysql"
+  serviceFQDN: "sdjpa-intro-mysql.sdjpa-intro.svc.cluster.local"
+
   database: bookdb
 
   port: 3306

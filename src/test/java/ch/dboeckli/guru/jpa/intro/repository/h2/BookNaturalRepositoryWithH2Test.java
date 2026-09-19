@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Import;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
-// we are using the h2 in compatible mode with mysql. to assure that it is not replaced with h2
+// we are using the h2 in compatible mode with mysql. to assure that it is not replaced
+// with h2
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @Import(DataInitializer.class)
 class BookNaturalRepositoryWithH2Test {

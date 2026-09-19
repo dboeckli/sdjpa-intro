@@ -16,12 +16,15 @@ import java.util.UUID;
 @Setter
 @ToString
 public class AuthorUuid {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @JdbcTypeCode(value = Types.VARCHAR)
-    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false )
+    @Column(length = 36, columnDefinition = "varchar(36)", updatable = false, nullable = false)
     private UUID id;
 
     private String firstName;
+
     private String lastName;
+
 }
