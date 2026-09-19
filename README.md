@@ -1,6 +1,115 @@
-# Spring Data JPA - Introduction to Spring Data JPA
+# Introduction to Spring Data JPA
 
-This repository contains source code examples to support my course Spring Data JPA and Hibernate Beginner to Guru.
+Spring Boot 4 / Spring Data JPA demo project on Java 25, demonstrating JPA repositories
+(natural/UUID/composite/embedded IDs) against H2 (MySQL-compat mode) and MySQL, with schema
+management via Flyway and Liquibase.
+
+## Architecture Overview
+
+```mermaid
+graph LR
+    Client(["💻 Client"])
+
+    subgraph App ["Spring Boot App :8080"]
+        Init["DataInitializer\n(seed data)"]
+        Repos["Spring Data JPA\nRepositories"]
+    end
+
+    subgraph Domain ["Domain Model (ID strategies)"]
+        LongId["Book / Author\n@GeneratedValue"]
+        NaturalId["BookNatural\nnatural id"]
+        UuidId["BookUuid / AuthorUuid\nUUID id"]
+        CompositeId["AuthorComposite / AuthorEmbedded\ncomposite / embedded id"]
+    end
+
+    subgraph Migration ["Schema Management"]
+        Flyway["Flyway\ndb/migration"]
+        Liquibase["Liquibase\ndb/changelog"]
+    end
+
+    subgraph Databases ["Databases"]
+        H2[("H2\nIn-Memory")]
+        MySQL[("MySQL\nDocker")]
+    end
+
+    Client -->|"actuator :8080"| App
+    Init --> Repos
+    Repos --> Domain
+    Repos <--> H2
+    Repos <--> MySQL
+    Flyway --> MySQL
+    Liquibase --> MySQL
+```
+
+## Database Schema
+
+```mermaid
+erDiagram
+    book {
+        BIGINT       id PK "auto_increment"
+        VARCHAR(255) title
+        VARCHAR(255) isbn
+        VARCHAR(255) publisher
+        BIGINT       author_id
+    }
+
+    author {
+        BIGINT       id PK "auto_increment"
+        VARCHAR(255) first_name
+        VARCHAR(255) last_name
+    }
+
+    author_uuid {
+        VARCHAR(36)  id PK
+        VARCHAR(255) first_name
+        VARCHAR(255) last_name
+    }
+
+    book_uuid {
+        BINARY(16)   id PK
+        VARCHAR(255) title
+        VARCHAR(255) isbn
+        VARCHAR(255) publisher
+    }
+
+    book_natural {
+        VARCHAR(255) title PK
+        VARCHAR(255) isbn
+        VARCHAR(255) publisher
+    }
+
+    author_composite {
+        VARCHAR(255) first_name PK
+        VARCHAR(255) last_name PK
+        VARCHAR(255) country
+    }
+
+    author_embedded {
+        VARCHAR(255) first_name PK
+        VARCHAR(255) last_name PK
+        VARCHAR(255) country
+    }
+
+    author ||--o{ book : "author_id"
+```
+
+## Build & Test
+
+```bash
+./mvnw clean verify          # full build: format check, unit (*Test) + IT (*IT) tests, Helm lint/template
+./mvnw clean install         # verify + build local Docker image + package Helm chart
+./mvnw test                  # unit tests only (surefire)
+./mvnw verify                # integration tests only (failsafe)
+./mvnw test -Dtest=BookRepositoryWithH2Test              # single test class
+./mvnw test -Dtest=BookRepositoryWithH2Test#methodName   # single test method
+./mvnw spotless:apply        # auto-fix pom/markdown/json/yaml/shell formatting
+./mvnw spring-javaformat:apply                           # auto-fix Java code style
+```
+
+> Formatting is enforced at the `validate` phase. Run both `spotless:apply` and
+> `spring-javaformat:apply` before committing if the build fails there.
+> Skip the in-build app boot with `-Dskip.start.stop.springboot=true` and the Docker build with
+> `-Dskip.docker.build=true`.
 
 ## Liquibase
 
@@ -36,15 +145,16 @@ Both Docker Compose files (for mysql/liquibase and mysql/flyway) initially use t
 
 ### Generate Config Map for mysql init script
 
-When updating 'src/scripts/init-mysql-liquibase.sql', apply the changes to the Kubernetes ConfigMap:
+When updating `src/scripts/init-mysql-liquibase.sql`, regenerate the Kubernetes ConfigMap:
 
-```bash
+```powershell
 kubectl create configmap mysql-init-script --from-file=init.sql=src/scripts/init-mysql-liquibase.sql --dry-run=client -o yaml | Out-File -Encoding utf8 k8s/mysql-init-script-configmap.yaml
 ```
 
 ### Deployment with Kubernetes
 
-Deployment goes into the default namespace.
+Deployment goes into the **default** namespace when using raw manifests, or the **`sdjpa-intro`** namespace when
+using Helm.
 
 To deploy all resources:
 
@@ -88,7 +198,7 @@ install
 
 ```powershell
 $APPLICATION_NAME = Get-ChildItem -Directory | Where-Object { $_.LastWriteTime -ge $file.LastWriteTime } | Select-Object -ExpandProperty Name
-helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --namespace sdjpa-intro --create-namespace --wait --timeout 5m --debug
+helm upgrade --install $APPLICATION_NAME ./$APPLICATION_NAME --namespace sdjpa-intro --create-namespace --wait --timeout 5m --debug --render-subchart-notes
 ```
 
 show logs and show event
@@ -132,13 +242,13 @@ helm uninstall $APPLICATION_NAME  --namespace sdjpa-intro
 delete all
 
 ```powershell
-kubectl delete all --all -n spring-6-project-template
+kubectl delete all --all -n sdjpa-intro
 ```
 
 create busybox sidecar
 
 ```powershell
-kubectl run busybox-test --rm -it --image=busybox:1.36 --namespace=spring-6-project-template --command -- sh
+kubectl run busybox-test --rm -it --image=busybox:1.36 --namespace=sdjpa-intro --command -- sh
 ```
 
 You can use the actuator rest call to verify via port 30080
@@ -204,6 +314,12 @@ sbx run "git+https://github.com/dboeckli/opencode-sandbox-kit.git#dir=mammouth-a
     --static-mcp idea `
     . `
     "C:\development\maven-repo:ro"
+```
+
+Apply the kit to an existing sandbox (restarts the sandbox, VM state is kept):
+
+```powershell
+sbx kit add <sandbox-name> "git+https://github.com/dboeckli/opencode-sandbox-kit.git#dir=opencode-agent"
 ```
 
 ### Start the app
